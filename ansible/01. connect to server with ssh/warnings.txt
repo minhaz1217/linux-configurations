@@ -1,0 +1,13 @@
+Remember to make the sure "public_key.ppk" file 
+
+# if you want to make it read only by you
+chmod 400 keys/public_key.ppk 
+
+# if you want to make it read and write only by you
+chmod 600 keys/public_key.ppk 
+
+And check permission with 
+ls -l keys
+
+test the connection to the server with
+ansible all -m ping
