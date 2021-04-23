@@ -1,0 +1,7 @@
+# 1. Copy the install_ansible.sh to desired location and cd into it
+
+# 2. Make the file executable
+chmod +x install_ansible.sh
+
+# 2. run the file with 
+bash install_ansible.sh
