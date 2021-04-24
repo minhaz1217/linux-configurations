@@ -1,0 +1,52 @@
+---
+- name: Installing Nginx
+  hosts: vagrant
+  become: yes
+  become_user: root
+  tasks:
+
+    - name: ensure nginx is at the latest version
+      apt: name=nginx state=latest
+    - name: start nginx
+      service:
+          name: nginx
+          state: started
+
+    - name: copy the nginx config file and restart nginx
+      become: yes
+      copy:
+        src: static_site.cfg
+        dest: /etc/nginx/sites-available/static_site.cfg
+
+    - name: create symlink
+      become: yes
+      file:
+        src: /etc/nginx/sites-available/static_site.cfg
+        dest: /etc/nginx/sites-enabled/default
+        state: link
+
+    - name: create the /home/www/static-site directory if it does not exist
+      file:
+        path: /home/www/static-site
+        state: directory
+        mode: '0755'
+
+    - name: copy the content of the web site
+      copy:
+        src: index.html
+        dest: /home/www/static-site
+
+    - name: restart nginx
+      service:
+        name: nginx
+        state: restarted
+      become: yes
+
+
+# Uninstalling nginx
+    # - name: stop nginx
+    #   service:
+    #       name: nginx
+    #       state: stopped
+    # - name: ensure nginx is not installed
+    #   apt: name=nginx state=absent

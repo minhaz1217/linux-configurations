@@ -1,5 +1,5 @@
 # had to make vagrant root user
-visudo
+sudo visudo
 
 #and adding under the line "# User privilege" 
 vagrant ALL=(ALL:ALL)ALL

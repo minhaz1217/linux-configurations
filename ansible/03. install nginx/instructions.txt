@@ -1,0 +1,17 @@
+# if the sudo user has no password we can run this as root by supplying -b flag, it means become root
+ansible-playbook playbook.yaml -b
+
+# or we can ask for root password by -K flag
+ansible-playbook playbook.yaml -b -K
+
+
+# may need to make the ansible a sudoer by editing this file
+
+## at first make a copy of the real sudoers
+cp /etc/sudoers /etc/sudoers.orginal
+
+## edit the file
+nano /etc/sudoers
+
+## add this line
+ansible  ALL=(ALL:ALL)ALL
