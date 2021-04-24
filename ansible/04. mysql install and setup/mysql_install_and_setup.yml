@@ -1,0 +1,9 @@
+---
+- name: Installing Nginx
+  hosts: vagrant
+  become: yes
+  become_user: root
+  vars_files:
+    - vars/vars.yml
+  roles:
+    - { role: geerlingguy.mysql }

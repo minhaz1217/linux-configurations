@@ -1,0 +1,11 @@
+# have to run this on host machine first before running the playbook
+ansible-galaxy install geerlingguy.mysql
+
+
+# What does this playbook do?
+1. It installs mysql
+2. It addes a database "ansibledb"
+3. It adds an user "ansible"
+
+# connect to mysql
+mysql -u ansible -h localhost -p
