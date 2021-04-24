@@ -1,0 +1,8 @@
+# had to make vagrant root user
+visudo
+
+#and adding under the line "# User privilege" 
+vagrant ALL=(ALL:ALL)ALL
+
+# need to run this to generate password
+ansible all -i localhost, -m debug -a "msg={{ 'vagrant' | password_hash('sha512', 'mysecretsalt') }}"

@@ -1,0 +1,5 @@
+# login as root then >>
+visudo
+
+#and adding under the line "# User privilege" 
+vagrant ALL=(ALL:ALL)ALL

@@ -1,0 +1,12 @@
+---
+- name: Add the user 'ansible' with a with a password to use along with ansible
+  hosts: vagrant
+  become: yes
+  become_user: root
+  tasks:
+  - name: Add the user 'ansible' with a with a password to use along with ansible
+    ansible.builtin.user:
+      name: ansible
+      comment: User created to work with ansible
+      # ansible all -i localhost, -m debug -a "msg={{ 'vagrant' | password_hash('sha512', 'mysecretsalt') }}"
+      password: $6$mysecretsalt$O84IJ70E.obgDNnrEPOl5RQs9coGX/6Vj/VQN28smYT/0K99GY8cRZKdfd8K4RKDi2raHGiPSIFpAOZPehEBU1
