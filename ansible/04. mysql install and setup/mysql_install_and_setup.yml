@@ -1,5 +1,5 @@
 ---
-- name: Installing Nginx
+- name: Installing mysql
   hosts: vagrant
   become: yes
   become_user: root

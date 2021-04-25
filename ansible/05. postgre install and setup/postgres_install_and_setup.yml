@@ -1,0 +1,11 @@
+---
+- name: Installing postgres
+  hosts: vagrant
+  become: yes
+  vars_files:
+    - vars/vars.yml
+  tasks:
+    - block: # workaround, see https://stackoverflow.com/a/56558842
+        - name: PSQL installation and configuration
+          include_role:
+            name: ANXS.postgresql

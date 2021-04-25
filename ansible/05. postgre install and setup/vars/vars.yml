@@ -1,0 +1,20 @@
+postgresql_users:
+  - name: ansible
+    pass: ansible
+  - name: app2
+    pass: $6$mysecretsalt$pYGf02hsuplCz8xx02leSOkmwlbZc/snI6Ks9FFQsIDPR9phRWUAgUKJZWSLAuSMh1jKWOeS8Pf1P8vXG.3iS1
+    encrypted: yes
+  - name: app3
+    pass: app3
+  - name: app4
+    pass: d535cf554ea66fbebfc415ac837a5828
+    encrypted: yes
+
+postgresql_databases:
+  - name: ansibledb
+    owner: postgres
+# to enable login from outside host
+postgresql_pg_hba_custom:
+  - {type: "host", database: "all", user: "all", address: "0.0.0.0/0", method: "md5" }
+  - { type: host, database: all, user: all, address: '127.0.0.1/32', method: md5 }
+  - { type: host, database: all, user: all, address: '::1/128', method: md5 }

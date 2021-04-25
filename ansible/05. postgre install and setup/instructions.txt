@@ -1,0 +1,35 @@
+# have to run this on host machine first before running the playbook
+ansible-galaxy  install anxs.postgresql
+
+# What does this playbook do?
+1. It installs postgres
+2. It addes a database "ansibledb"
+3. It adds an user "ansible"
+
+# to connect to the ansible user
+psql -U ansible -h 127.0.0.1 -d postgres
+
+# after running the play book and to connect to the default user postgres, change user to postgres
+su postgres
+psql
+\du
+
+## this will show you the current users
+## to view the databases
+\list
+
+
+# to view config
+grep -E '^postgresql_(version|port|max_connections):' ~/.Ansible/roles/anxs.postgresql/defaults/main.yml
+
+ss
+# After running the playbook, you can run this to verify that postgres has been installed in the remote machine
+dpkg -l | grep postgres
+
+# Uninstall postgres using this
+sudo apt-get --purge remove postgresql postgresql-11 postgresql-client-11 postgresql-client-common postgresql-common -y
+## Here postgresql and postgresql-client-11 are the names of the postgers packages that we got from the dpkg command
+sudo apt-get --purge remove postgresql
+
+# WARNING
+To connect form outside the remote machine, we need to set up ssh tunnel first then connect and rememebr to supply the host 127.0.0.1

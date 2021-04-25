@@ -1,11 +1,13 @@
 # have to run this on host machine first before running the playbook
 ansible-galaxy install geerlingguy.mysql
 
+# Warning
+## An user MUST be created to access the mysql from outside because it refuses request other than localhost
 
 # What does this playbook do?
 1. It installs mysql
 2. It addes a database "ansibledb"
 3. It adds an user "ansible"
 
-# connect to mysql
+# connect to mysql, from the remote host first
 mysql -u ansible -h localhost -p
