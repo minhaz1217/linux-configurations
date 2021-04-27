@@ -17,3 +17,6 @@ show dbs;
 cd /etc/apt/sources.list.d
 ls
 rm <all the mongodb files in this director>
+
+
+## To connect we may need to connect via ssh

@@ -22,6 +22,12 @@
         update_cache: yes
       notify:
       - start mongodb
+
+    - name: Enable service mongod to start on boot
+      systemd:
+        name: mongod
+        enabled: yes
+        masked: no
       
   handlers:
     - name: start mongodb
