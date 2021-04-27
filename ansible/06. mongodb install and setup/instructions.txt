@@ -1,0 +1,19 @@
+# What does this playbook do?
+1. It installs mongodb
+
+# To test the installation, use this on remote
+systemctl status mongod
+mongo
+show dbs;
+
+
+# Warnings
+
+## if this error occurs "E:Failed to fetch http://downloads-distro.mongodb.org/repo/ubuntu-upstart/dists/dist/InRelease  
+## Clearsigned file isn't valid, got 'NOSPLIT' (does the network require authentication?), 
+## E:Some index files failed to download. They have been ignored, or old ones used instead."
+
+### then remove all the files
+cd /etc/apt/sources.list.d
+ls
+rm <all the mongodb files in this director>

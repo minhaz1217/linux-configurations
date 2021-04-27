@@ -1,0 +1,28 @@
+---
+- name: Installing mongodb
+  hosts: vagrant
+  become: yes
+  tasks:
+    # wget -qO - https://www.mongodb.org/static/pgp/server-4.4.asc | sudo apt-key add -
+    
+    - name: Add an Apt signing key, uses whichever key is at the URL
+      apt_key:
+        url: https://www.mongodb.org/static/pgp/server-4.4.asc
+        state: present
+
+    - name: Add MongoDB repository
+      apt_repository: 
+        repo: deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/4.4 multiverse
+        state: present
+    
+    - name: install mongodb
+      apt: 
+        name: mongodb-org 
+        state: latest 
+        update_cache: yes
+      notify:
+      - start mongodb
+      
+  handlers:
+    - name: start mongodb
+      service: name=mongod state=started
