@@ -93,3 +93,8 @@ sudo docker-compose up -d
 sudo docker-compose exec app php artisan key:generate
 sudo docker-compose exec app php artisan config:cache
 ## at this point you can visit the app
+
+# now creating a user for our app to connect in the db
+sudo docker-compose exec db bash -c 'mysql -u root -p123 -e "show databases;GRANT ALL ON laravel.* TO \"$(mysqlUser)\"@\"%\" IDENTIFIED BY \"$(mysqlPassword)\";FLUSH PRIVILEGES;"'
+sudo docker-compose exec app php artisan migrate
+
