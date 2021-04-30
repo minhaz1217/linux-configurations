@@ -1,0 +1,1 @@
+sudo docker-compose exec -u 0 app bash
