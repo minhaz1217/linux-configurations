@@ -1,0 +1,68 @@
+---
+- name: Deploying easycommerce
+  hosts: vagrant
+  become: yes
+  tasks:
+    - name: "APT: Install aptitude package"
+      apt:
+        name: aptitude
+        force_apt_get: yes
+
+    - name: update apt list
+      apt:
+        update_cache: yes
+    - name: Install aptitude using apt
+      apt: name=aptitude state=latest
+
+    - name: Install required system packages
+      apt: name={{ item }} state=latest update_cache=yes
+      loop: [ 'apt-transport-https', 'ca-certificates', 'curl','gnupg', 'lsb-release']
+
+    - name: Add Docker GPG apt Key
+      apt_key:
+       url: https://download.docker.com/linux/ubuntu/gpg
+       state: present
+
+    - name: Add Docker Repository
+      apt_repository:
+       repo: deb https://download.docker.com/linux/ubuntu bionic stable
+       state: present
+
+    - name: Update apt and install docker-ce, cli, containerd
+      apt: name={{ item }} state=latest update_cache=yes
+      loop: [ 'docker-ce', 'docker-ce-cli', 'containerd.io']
+  
+    - name: install git package
+      apt:
+        name: git
+
+    - name: Created the ecommerce directory
+      file:
+        path: /home/projects/easycommerce
+        state: directory
+        mode: '0755'
+    - name: Cloning git
+      git:
+        repo: 'https://{{ githubuser | urlencode }}:{{ githubpassword | urlencode }}@github.com/minhaz1217/EasyCommerce.git'
+        dest: /home/projects/easycommerce
+        clone: yes
+        update: yes
+
+    - name: Install python docker-ce
+      pip: name=docker-py
+
+    - name: Build the easycommerce_image
+      community.docker.docker_image:
+        name: easycommerce_image
+        build:
+          path: /home/projects/easycommerce
+          args:
+            log_volume: /var/log/myapp
+            listen_port: 80
+        source: build
+    # - name: Create a data container
+    #   community.docker.docker_container:
+    #     name: easycommerce
+    #     image: myimage
+    #     published_ports: 5000:80
+    #     state: started

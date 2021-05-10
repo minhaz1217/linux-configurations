@@ -1,0 +1,19 @@
+# Run this playbook using this command
+ansible-playbook deploy_easycommerce.yml -e "githubuser=<your_github_username>" -e "githubpassword=<your_github_password>"
+# Install ansible collection first
+ansible-galaxy collection install community.docker
+
+#may need to install python docker
+pip install docker
+
+#in the host, install python module for docker
+sudo add-apt-repository universe
+curl https://bootstrap.pypa.io/pip/2.7/get-pip.py --output get-pip.py
+
+# installing pip3 for python
+sudo apt-get update
+sudo apt install python3-pip -y
+
+# installing pip for python2
+sudo apt-get update
+sudo apt install python-pip

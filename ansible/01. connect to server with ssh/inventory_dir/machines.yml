@@ -4,10 +4,13 @@ all:
   children:
     vagrant:
       hosts:
-        local1:
-          ansible_host: 127.0.0.1
+        # local1:
+        #   ansible_host: 192.168.50.101
+        local2:
+          ansible_host: 192.168.50.102
+
       vars:
-        ansible_port: 2222
+        ansible_port: 22
         ansible_user : vagrant
         ansible_password : vagrant
         ansible_private_key_file: ./keys/public_key.ppk
