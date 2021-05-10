@@ -1,7 +1,13 @@
+# Install ansible collection first, for docker >= 3
+ansible-galaxy collection install community.docker
+
+# and for docker < 3
+ansible-galaxy collection install community.general
+
 # Run this playbook using this command
 ansible-playbook deploy_easycommerce.yml -e "githubuser=<your_github_username>" -e "githubpassword=<your_github_password>"
-# Install ansible collection first
-ansible-galaxy collection install community.docker
+
+
 
 #may need to install python docker
 pip install docker
