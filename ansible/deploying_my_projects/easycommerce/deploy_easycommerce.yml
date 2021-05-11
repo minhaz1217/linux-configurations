@@ -22,43 +22,43 @@
       apt: name={{ item }} state=latest update_cache=yes
       loop: [ 'docker-ce', 'docker-ce-cli', 'containerd.io']
   
-    # # installing git
-    # - name: install git package
-    #   apt:
-    #     name: git
-    #     update_cache: yes
+    # installing git
+    - name: install git package
+      apt:
+        name: git
+        update_cache: yes
 
-    # - name: Created the ecommerce directory
-    #   file:
-    #     path: /home/projects/easycommerce
-    #     state: directory
-    #     mode: '0755'
-    # - name: Cloning git
-    #   git:
-    #     repo: 'https://{{ githubuser | urlencode }}:{{ githubpassword | urlencode }}@github.com/minhaz1217/EasyCommerce.git'
-    #     dest: /home/projects/easycommerce
-    #     clone: yes
-    #     update: yes
-    #   async: 1000
-    #   poll: 0
-    #   register: git_cloning
-    # # trying to show status while git clones
-    # - name: 'Git cloning status'
-    #   async_status:
-    #     jid: "{{ git_cloning.ansible_job_id }}"
-    #   register: job_result
-    #   until: job_result.finished
-    #   retries: 100
+    - name: Created the ecommerce directory
+      file:
+        path: /home/projects/easycommerce
+        state: directory
+        mode: '0755'
+    - name: Cloning git
+      git:
+        repo: 'https://{{ githubuser | urlencode }}:{{ githubpassword | urlencode }}@github.com/minhaz1217/EasyCommerce.git'
+        dest: /home/projects/easycommerce
+        clone: yes
+        update: yes
+      async: 1000
+      poll: 0
+      register: git_cloning
+    # trying to show status while git clones
+    - name: 'Git cloning status'
+      async_status:
+        jid: "{{ git_cloning.ansible_job_id }}"
+      register: job_result
+      until: job_result.finished
+      retries: 100
 
-    # # installing pip
-    # - name: Install pip3
-    #   apt:
-    #     name: python3-pip
-    #     update_cache: yes
+    # installing pip
+    - name: Install pip3
+      apt:
+        name: python3-pip
+        update_cache: yes
 
-    # # installing docker py
-    # - name: Install python docker-ce
-    #   pip: name=docker-py
+    # installing docker py
+    - name: Install python docker-ce
+      pip: name=docker-py
 
     - name: Build the easycommerce_image
       docker_image:
@@ -67,9 +67,9 @@
           path: /home/projects/easycommerce
         source: build
 
-    # - name: Create a data container
-    #   community.docker.docker_container:
-    #     name: easycommerce
-    #     image: myimage
-    #     published_ports: 5000:80
-    #     state: started
+    - name: Create a data container
+      docker_container:
+        name: easycommerce
+        image: easycommerce_image
+        published_ports: 5000:80
+        state: started
