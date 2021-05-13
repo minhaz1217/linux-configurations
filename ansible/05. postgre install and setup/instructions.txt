@@ -31,5 +31,24 @@ sudo apt-get --purge remove postgresql postgresql-11 postgresql-client-11 postgr
 ## Here postgresql and postgresql-client-11 are the names of the postgers packages that we got from the dpkg command
 sudo apt-get --purge remove postgresql
 
+# trick, to connect from gues to host machine's postgres
+
+## Step 1: find the host's ip
+apt install net-tools
+### run , and found out the gateway, it can be like this: 10.0.2.2
+netstat -rn
+
+## Step 2 : change host machine's postgres config to allow access from this host
+### Find the pg_hba.conf file and add this line, in windows it is in  /data folder, in linux it can be /etc/postgresql/9.4/main)
+host all all 0.0.0.0/0 trust
+### Make sure postgresql.conf has this
+listen_addresses = '*'
+
+## Step 3: restart postgres
+sudo systemctl restart postgresql
+
+## Step 4: after restart , try to connect
+psql -p5432 -h 10.0.2.2  -U postgres -d envalyzer -W
+
 # WARNING
 To connect form outside the remote machine, we need to set up ssh tunnel first then connect and rememebr to supply the host 127.0.0.1

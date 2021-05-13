@@ -5,7 +5,7 @@ all:
     vagrant:
       hosts:
         local1:
-          ansible_host: 192.168.50.101
+          ansible_host: 192.168.50.103
       vars:
         ansible_port: 22
         ansible_user : vagrant
