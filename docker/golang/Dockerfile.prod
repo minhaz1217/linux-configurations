@@ -1,0 +1,32 @@
+# Dockerfile.production
+# The build stage
+FROM golang:1.16-buster as builder
+ENV APP_USER app
+ENV APP_HOME /go/src/envalyzer
+RUN groupadd $APP_USER && useradd -m -g $APP_USER -l $APP_USER
+RUN mkdir -p $APP_HOME && chown -R $APP_USER:$APP_USER $APP_HOME
+USER $APP_USER
+WORKDIR $APP_HOME
+COPY . .
+#RUN go mod download
+#RUN go mod verify
+RUN go build -o envalyzer
+
+FROM golang:1.16-buster
+ENV APP_USER app
+ENV APP_HOME /go/src/envalyzer
+RUN groupadd $APP_USER && useradd -m -g $APP_USER -l $APP_USER
+RUN mkdir -p $APP_HOME
+WORKDIR $APP_HOME
+COPY webapp/public webapp/public
+COPY webapp/views webapp/views
+COPY .env .
+COPY --chown=0:0 --from=builder $APP_HOME/envalyzer $APP_HOME
+EXPOSE 3000
+USER $APP_USER
+CMD ["./envalyzer"]
+
+# build command
+# docker build -t envprod -f Dockerfile.prod .
+# run command
+# sudo docker run -it --rm -p8010:3000 --name=env2 envprod
