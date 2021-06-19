@@ -1,0 +1,29 @@
+# Use root/example as user/password credentials
+version: '3.1'
+
+services:
+
+  db:
+    image: mysql
+    command: --default-authentication-plugin=mysql_native_password
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: myrootpassword
+    volumes: 
+      - ./conf.d:/etc/mysql/conf.d
+      - /home/vagrant/storage/mysql-data:/var/lib/mysql
+    ports:
+      - 6001:3306
+
+  adminer:
+    image: adminer
+    restart: unless-stopped
+    ports:
+      - 7001:8080
+
+# port 6k for db, 7k for supporting app ie db supporting app or logging supporint app, 8k for personal app.
+# At first  need to create necessary folder on host machine
+# mkdir -p /home/vagrant/storage/mysql-data
+
+# Boot up by using.
+# sudo docker-compose up -d
