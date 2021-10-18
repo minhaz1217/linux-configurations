@@ -12,7 +12,8 @@
     - name: Install Kubernetes Servers
       shell: |
               sudo apt update
-              sudo apt -y upgrade && sudo systemctl reboot
+              sudo apt -y upgrade 
+# sudo systemctl reboot
 # Step 2, intall kubelet, kubeadm and kubectl
     - name: install and configure dependencies
       shell: |
