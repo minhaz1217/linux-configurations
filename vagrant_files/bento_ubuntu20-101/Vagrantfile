@@ -4,7 +4,7 @@
 Vagrant.configure("2") do |config|
   config.vm.box = "bento/ubuntu-20.04"
   config.disksize.size = '10GB'
-  config.vm.synced_folder "C:/website/", "/home/vagrant/website",
+  config.vm.synced_folder "D:/Asthait/MINHAZ/linux-configurations/", "/home/vagrant/website",
 	  owner: "vagrant",
 	  group: "vagrant",
     mount_options: ["dmode=775,fmode=664"]
