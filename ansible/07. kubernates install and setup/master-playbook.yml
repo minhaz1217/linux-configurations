@@ -59,7 +59,7 @@
     command: swapoff -a
     when: ansible_swaptotal_mb > 0
 
-# Installing kubelet, kubeadm and kubectl using the below code.
+# 2.3 Installing kubelet, kubeadm and kubectl using the below code.
   - name: Add an apt signing key for Kubernetes
     apt_key:
       url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
@@ -86,18 +86,18 @@
     lineinfile:
       path: /etc/default/kubelet
       line: KUBELET_EXTRA_ARGS=--node-ip={{ node_ip }}
-
+      create: yes
   - name: Restart kubelet
     service:
       name: kubelet
       daemon_reload: yes
       state: restarted
 
-# Initialize the Kubernetes cluster with kubeadm using the below code (applicable only on master node).
+# 2.3 Initialize the Kubernetes cluster with kubeadm using the below code (applicable only on master node).
   - name: Initialize the Kubernetes cluster using kubeadm
     command: kubeadm init --apiserver-advertise-address="192.168.50.101" --apiserver-cert-extra-sans="192.168.50.101"  --node-name k8s-master --pod-network-cidr=192.168.0.0/16
 
-# Setup the kube config file for the vagrant user to access the Kubernetes cluster using the below code.
+# 2.4 Setup the kube config file for the vagrant user to access the Kubernetes cluster using the below code.
   - name: Setup kubeconfig for vagrant user
     command: "{{ item }}"
     with_items:
@@ -105,12 +105,12 @@
      - cp -i /etc/kubernetes/admin.conf /home/vagrant/.kube/config
      - chown vagrant:vagrant /home/vagrant/.kube/config
 
-# Setup the container networking provider and the network policy engine using the below code
+# 2.5 Setup the container networking provider and the network policy engine using the below code
   - name: Install calico pod network
     become: false
     command: kubectl create -f https://docs.projectcalico.org/v3.4/getting-started/kubernetes/installation/hosted/calico.yaml
 
-# Generate kube join command for joining the node to the Kubernetes cluster and store the command in the file named join-command
+# 2.6 Generate kube join command for joining the node to the Kubernetes cluster and store the command in the file named join-command
   - name: Generate join command
     command: kubeadm token create --print-join-command
     register: join_command
@@ -118,7 +118,7 @@
   - name: Copy join command to local file
     local_action: copy content="{{ join_command.stdout_lines[0] }}" dest="./join-command"
 
-# Setup a handler for checking Docker daemon using the below code
+# 2.7 Setup a handler for checking Docker daemon using the below code
 
   handlers:
     - name: docker status

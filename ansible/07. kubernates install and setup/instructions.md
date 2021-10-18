@@ -5,18 +5,34 @@ https://kubernetes.io/blog/2019/03/15/kubernetes-setup-using-ansible-and-vagrant
 ansible -i hosts all -m ping
 
 # 2. run for the master
-ansible-playbook -i master master-playbook.yml --extra-vars "node_ip=192.168.50.101"
+ansible-playbook -i hosts master master-playbook.yml --extra-vars "node_ip=192.168.50.101"
 
 # 3. Run for the workers
-ansible-playbook -i worker1 worker-playbook.yml --extra-vars "node_ip=192.168.50.103"
-ansible-playbook -i worker2 worker-playbook.yml --extra-vars "node_ip=192.168.50.104"
+ansible-playbook -i hosts worker-playbook.yml --extra-vars "node_ip=192.168.50.103 target=worker1"
+ansible-playbook -i hosts worker-playbook.yml --extra-vars "node_ip=192.168.50.104 target=worker2"
+
+## ------------- Errors -----------
+# if stops at |Initialize the Kubernetes cluster using kubeadm|
+then login to the host and run this
+sudo kubeadm init --apiserver-advertise-address="192.168.50.101" --apiserver-cert-extra-sans="192.168.50.101"  --node-name k8s-master --pod-network-cidr=192.168.0.0/16 --v=5
+
+if this throws a error where it says *** file already exists
+sudo rm /etc/kubernetes/manifests/kube-apiserver.yaml
+sudo rm /etc/kubernetes/manifests/kube-controller-manager.yaml
+sudo rm /etc/kubernetes/manifests/kube-scheduler.yaml
+sudo rm /etc/kubernetes/manifests/etcd.yaml
+
+then run the 
+sudo kubeadm init --apiserver-advertise-address="192.168.50.101" --apiserver-cert-extra-sans="192.168.50.101"  --node-name k8s-master --pod-network-cidr=192.168.0.0/16 --v=5
 
 
 
-
-
-
-
+# if running kubectl get nodes throws the *** server was refused connection
+kubectl get nodes
+sudo -i
+swapoff -a
+exit
+strace -eopenat kubectl version
 
 
 # got help from 
