@@ -1,6 +1,5 @@
 ---
-- hosts: "masters, workers"
-  remote_user: ubuntu
+- hosts: "workers"
   become: yes
   become_method: sudo
   become_user: root
@@ -12,7 +11,8 @@
     - name: Install Kubernetes Servers
       shell: |
               sudo apt update
-              sudo apt -y upgrade && sudo systemctl reboot
+              sudo apt -y upgrade             
+# && sudo systemctl reboot
 # Step 2, intall kubelet, kubeadm and kubectl
     - name: install and configure dependencies
       shell: |
@@ -38,8 +38,8 @@
 # Step 3: Disable swap
     - name: disable swap
       shell: |
-              sudo swapoff -a
               sudo sed -i '/ swap / s/^\(.*\)$/#\1/g' /etc/fstab
+              sudo swapoff -a
 
     - name: Enable kernel modules
       shell: |
@@ -48,12 +48,12 @@
 
     - name: Set system configurations for Kubernetes networking
       file:
-        path: "/etc/sysctl.d/99-kubernetes-cri.conf"
+        path: "/etc/sysctl.d/kubernetes.conf"
         state: "touch"
 
     - name: Add conf for containerd
       blockinfile:
-        path: "/etc/sysctl.d/99-kubernetes-cri.conf"
+        path: "/etc/sysctl.d/kubernetes.conf"
         block: |
                 net.bridge.bridge-nf-call-ip6tables = 1
                 net.bridge.bridge-nf-call-iptables = 1

@@ -1,3 +1,8 @@
+# https://computingforgeeks.com/deploy-kubernetes-cluster-on-ubuntu-with-kubeadm/
+# RUN: 
+ansible-playbook -i hosts install-k8s-docker.yml
+sudo systemctl reboot
+
 # got help from 
 https://kubernetes.io/blog/2019/03/15/kubernetes-setup-using-ansible-and-vagrant/#step-2-3-initialize-the-kubernetes-cluster-with-kubeadm-using-the-below-code-applicable-only-on-master-node
 
@@ -16,15 +21,25 @@ ansible-playbook -i hosts worker-playbook.yml --extra-vars "node_ip=192.168.50.1
 then login to the host and run this
 sudo kubeadm init --apiserver-advertise-address="192.168.50.101" --apiserver-cert-extra-sans="192.168.50.101"  --node-name k8s-master --pod-network-cidr=192.168.0.0/16 --v=5
 
-if this throws a error where it says *** file already exists
+# if this throws a error where it says *** file already exists
 sudo rm /etc/kubernetes/manifests/kube-apiserver.yaml
 sudo rm /etc/kubernetes/manifests/kube-controller-manager.yaml
 sudo rm /etc/kubernetes/manifests/kube-scheduler.yaml
 sudo rm /etc/kubernetes/manifests/etcd.yaml
 
-then run the 
+# then run the 
 sudo kubeadm init --apiserver-advertise-address="192.168.50.101" --apiserver-cert-extra-sans="192.168.50.101"  --node-name k8s-master --pod-network-cidr=192.168.0.0/16 --v=5
 
+# Solution 2: 
+run 
+sudo nano /etc/docker/daemon.json
+add
+{
+"exec-opts": ["native.cgroupdriver=systemd"]
+}
+restart
+sudo systemctl restart docker
+sudo systemctl restart kubelet
 
 
 # if running kubectl get nodes throws the *** server was refused connection
@@ -33,6 +48,11 @@ sudo -i
 swapoff -a
 exit
 strace -eopenat kubectl version
+
+
+sudo systemctl daemon-reload
+sudo systemctl restart docker
+sudo systemctl restart kubelet
 
 
 # got help from 
