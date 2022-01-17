@@ -159,16 +159,20 @@ docker run -it -d --name mongo-express -p 8007:8081 -e ME_CONFIG_OPTIONS_EDITORT
 
 `docker run -d -it --network minhazul-net --name=prometheus -v $DOCKER_VOLUMES_ROOT/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml prom/prometheus`
 
---config.file="/etc/prometheus/prometheus.yml"
-
 `docker run -p 9090:9090 -v %DOCKER_VOLUMES_ROOT%/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml prom/prometheus`
 
 
 docker run -d -it --network minhazul-net --name=prometheus -p 9090:9090 -v %DOCKER_VOLUMES_ROOT%/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml -v %DOCKER_VOLUMES_ROOT%/prometheus/data:/prometheus/ prom/prometheus
 
+## Prometheus - Node exporter
+`docker run -d -it --network minhazul-net --name=node-exporter -v "/:/host:ro,rslave" quay.io/prometheus/node-exporter:latest --path.rootfs=/host`
+
+## Prometheus - Cadvisor
+`sudo docker run --network minhazul-net --name=cadvisor --volume=/:/rootfs:ro --volume=/var/run:/var/run:ro --volume=/sys:/sys:ro --volume=/var/lib/docker/:/var/lib/docker:ro --volume=/dev/disk/:/dev/disk:ro --detach=true  --privileged --device=/dev/kmsg gcr.io/cadvisor/cadvisor`
+
 # Grafana
 echo $UID
-`docker run -d -it --network minhazul-net --name=grafana -e "GF_INSTALL_PLUGINS=grafana-clock-panel,grafana-simple-json-datasource"  grafana/grafana-enterprise`
+`docker run -d -it --network minhazul-net --name=grafana -e "GF_INSTALL_PLUGINS=grafana-clock-panel,grafana-simple-json-datasource"  grafana/grafana-oss`
 
 docker run -d -it --network minhazul-net --name=grafana -p 9001:3000 -v $DOCKER_VOLUMES_ROOT/grafana:/var/lib/grafana -e "GF_INSTALL_PLUGINS=grafana-clock-panel,grafana-simple-json-datasource"  grafana/grafana-enterprise
 
@@ -176,3 +180,9 @@ docker run -d -it --network minhazul-net --name=grafana -p 9001:3000 -v $DOCKER_
 docker run -d -it --network minhazul-net --name node-exporter -v "%DOCKER_VOLUMES_ROOT%/prometheus/node-exporter/:/host:ro,rslave" quay.io/prometheus/node-exporter:latest --path.rootfs=/host
 
 sudo docker run -d -it --network minhazul-net --name=cadvisor --volume=%DOCKER_VOLUMES_ROOT%/prometheus/cadvisor/:/rootfs:ro --volume=%DOCKER_VOLUMES_ROOT%/prometheus/cadvisor/var/run:/var/run:ro --volume=%DOCKER_VOLUMES_ROOT%/prometheus/cadvisor/sys:/sys:ro --volume=%DOCKER_VOLUMES_ROOT%/prometheus/cadvisor/var/lib/docker/:/var/lib/docker:ro --volume=%DOCKER_VOLUMES_ROOT%/prometheus/cadvisor/dev/disk/:/dev/disk:ro --publish=8080:8080 --detach=true --name=cadvisor --privileged gcr.io/cadvisor/cadvisor
+
+
+
+
+
+
