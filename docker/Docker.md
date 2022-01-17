@@ -1,14 +1,18 @@
+set DOCKER_VOLUMES_ROOT=D:/MyComputer/database
+export DOCKER_VOLUMES_ROOT=$HOME/database
+
+
 # MySQL
 https://hub.docker.com/_/mysql
 
-`docker run --name mysql -p 3306:3306 -v D:/MyComputer/database/mysql:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=minhaz -d mysql:latest`
+`docker run --name mysql -p 3306:3306 -v %DOCKER_VOLUMES_ROOT%/mysql:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=minhaz -d mysql:latest`
 
 
 # Postgres
-`docker run --name postgres -p 5432:5432 -v D:/MyComputer/database/postgres:/var/lib/postgresql/data -e POSTGRES_USER=minhaz -e POSTGRES_PASSWORD=minhaz -e PGDATA=/var/lib/postgresql/data/pgdata -d postgres:latest`
+`docker run --name postgres -p 5432:5432 -v %DOCKER_VOLUMES_ROOT%/postgres:/var/lib/postgresql/data -e POSTGRES_USER=minhaz -e POSTGRES_PASSWORD=minhaz -e PGDATA=/var/lib/postgresql/data/pgdata -d postgres:latest`
 
 # MongoDB
-`docker run --name mongo -p 27017:27017 -v D:/MyComputer/database/mongodb:/data/db -e MONGO_INITDB_ROOT_USERNAME=mongoadmin -e MONGO_INITDB_ROOT_PASSWORD=minhaz -d mongo`
+`docker run --name mongo -p 27017:27017 -v %DOCKER_VOLUMES_ROOT%/mongodb:/data/db -e MONGO_INITDB_ROOT_USERNAME=mongoadmin -e MONGO_INITDB_ROOT_PASSWORD=minhaz -d mongo`
 
 # General docker commands
 ## See logs:
@@ -17,12 +21,12 @@ https://hub.docker.com/_/mysql
 `docker logs some-mongo`
 
 # Neo4j
-`docker run -d --name neo4j -v D:/MyComputer/database/neo4j:/data --publish=7474:7474 --publish=7473:7473 --publish=7687:7687 neo4j`
+`docker run -d --name neo4j -v %DOCKER_VOLUMES_ROOT%/neo4j:/data --publish=7474:7474 --publish=7473:7473 --publish=7687:7687 neo4j`
 
 # ElasticSearch
 data02:/usr/share/elasticsearch/data
 
-`docker run -d --name elasticsearch -v D:/MyComputer/database/elasticsearch:/usr/share/elasticsearch/data -p 9200:9200 -p 9300:9300 -e "discovery.type=single-node" docker.elastic.co/elasticsearch/elasticsearch:7.15.1`
+`docker run -d --name elasticsearch -v %DOCKER_VOLUMES_ROOT%/elasticsearch:/usr/share/elasticsearch/data -p 9200:9200 -p 9300:9300 -e "discovery.type=single-node" docker.elastic.co/elasticsearch/elasticsearch:7.15.1`
 ## backup elastic search
 ### 1. Register a repository
 yum install nano
@@ -78,10 +82,10 @@ POST /_snapshot/my_backup/snapshot_name/_restore
   "include_aliases": false
 }
 # Kibana
-docker run -d --name kibana -v D:/MyComputer/database/kibana:/usr/share/kibana/data -p 5601:5601 --link elasticsearch:elasticsearch docker.elastic.co/kibana/kibana:7.15.1
+docker run -d --name kibana -v %DOCKER_VOLUMES_ROOT%/kibana:/usr/share/kibana/data -p 5601:5601 --link elasticsearch:elasticsearch docker.elastic.co/kibana/kibana:7.15.1
 
 # Cassandra
-docker run --name cassandra -v D:/MyComputer/database/cassandra:/var/lib/cassandra -d cassandra:latest
+docker run --name cassandra -v %DOCKER_VOLUMES_ROOT%/cassandra:/var/lib/cassandra -d cassandra:latest
 
 ### Get IP of container
 docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' container_name_or_id
@@ -94,18 +98,18 @@ mongodb://mongoadmin:minhaz@172.17.0.3:27017/grandnode2?authSource=admin&readPre
 
 # Nginx
 ## First copy the nginx config file from a temp container
-mkdir D:/MyComputer/database/nginx/nginx/
+mkdir %DOCKER_VOLUMES_ROOT%/nginx/nginx/
 docker run --name tmp-nginx-container -d nginx
-docker cp tmp-nginx-container:/etc/nginx/ D:/MyComputer/database/nginx/
-docker cp tmp-nginx-container:/etc/nginx/nginx.conf D:/MyComputer/database/nginx/nginx
+docker cp tmp-nginx-container:/etc/nginx/ %DOCKER_VOLUMES_ROOT%/nginx/
+docker cp tmp-nginx-container:/etc/nginx/nginx.conf %DOCKER_VOLUMES_ROOT%/nginx/nginx
 docker rm -f tmp-nginx-container
 
 ## Run the nginx
-docker run --name nginx --net-alias nginx -v D:/MyComputer/database/nginx/nginx:/etc/nginx -v D:/MyComputer/database/nginx/cert:/etc/ssl/private -p 80:80 -p 443:443 --network minhazul-net -d nginx
+docker run --name nginx --net-alias nginx -v %DOCKER_VOLUMES_ROOT%/nginx/nginx:/etc/nginx -v %DOCKER_VOLUMES_ROOT%/nginx/cert:/etc/ssl/private -p 80:80 -p 443:443 --network minhazul-net -d nginx
 
 ## After run
-mkdir D:/MyComputer/database/nginx/nginx/conf.d/sites-available
-mkdir D:/MyComputer/database/nginx/nginx/conf.d/sites-enabled
+mkdir %DOCKER_VOLUMES_ROOT%/nginx/nginx/conf.d/sites-available
+mkdir %DOCKER_VOLUMES_ROOT%/nginx/nginx/conf.d/sites-enabled
 
 ## Create file in sites-available named plex.conf
 upstream plex {
@@ -133,7 +137,7 @@ docker exec nginx nginx -s reload
 
 # Nginx Proxy Manager
 
-`docker run --name nginx_proxymanager --net-alias nginx_proxymanager -v D:/MyComputer/database/nginx_proxymanager/:/data -v D:/MyComputer/database/nginx_proxymanager/letsencrypt:/etc/letsencrypt -p 80:80 -p 443:443 -p 81:81 --network minhazul-net -d jc21/nginx-proxy-manager:latest`
+`docker run --name nginx_proxymanager --net-alias nginx_proxymanager -v %DOCKER_VOLUMES_ROOT%/nginx_proxymanager/:/data -v %DOCKER_VOLUMES_ROOT%/nginx_proxymanager/letsencrypt:/etc/letsencrypt -p 80:80 -p 443:443 -p 81:81 --network minhazul-net -d jc21/nginx-proxy-manager:latest`
 
 ## Create a network
 docker network create -d bridge minhazul-net
@@ -147,3 +151,28 @@ docker run --name adminer -p 8006:8080 -it -d adminer
 # Mongo compass
 docker run -it -d --name mongo-express -p 8007:8081 -e ME_CONFIG_OPTIONS_EDITORTHEME="ambiance" -e ME_CONFIG_MONGODB_SERVER="172.17.0.1" -e ME_CONFIG_MONGODB_ADMINUSERNAME="mongoadmin" -e ME_CONFIG_MONGODB_ADMINPASSWORD="minhaz" -e ME_CONFIG_BASICAUTH_USERNAME="mongominhaz" -e ME_CONFIG_BASICAUTH_PASSWORD="minhaz" mongo-express
 
+
+# Proxy SQL
+`docker run -it -d --name proxysql --network minhazul-net -p 16032:6032 -p 16033:6033 -p 16070:6070 -d -v %DOCKER_VOLUMES_ROOT%/proxysql/proxysql.cnf:/etc/proxysql.cnf -v %DOCKER_VOLUMES_ROOT%/proxysql/data:/var/lib/proxysql proxysql/proxysql`
+
+# Prometheus
+
+`docker run -d -it --network minhazul-net --name=prometheus -v $DOCKER_VOLUMES_ROOT/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml prom/prometheus`
+
+--config.file="/etc/prometheus/prometheus.yml"
+
+`docker run -p 9090:9090 -v %DOCKER_VOLUMES_ROOT%/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml prom/prometheus`
+
+
+docker run -d -it --network minhazul-net --name=prometheus -p 9090:9090 -v %DOCKER_VOLUMES_ROOT%/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml -v %DOCKER_VOLUMES_ROOT%/prometheus/data:/prometheus/ prom/prometheus
+
+# Grafana
+echo $UID
+`docker run -d -it --network minhazul-net --name=grafana -e "GF_INSTALL_PLUGINS=grafana-clock-panel,grafana-simple-json-datasource"  grafana/grafana-enterprise`
+
+docker run -d -it --network minhazul-net --name=grafana -p 9001:3000 -v $DOCKER_VOLUMES_ROOT/grafana:/var/lib/grafana -e "GF_INSTALL_PLUGINS=grafana-clock-panel,grafana-simple-json-datasource"  grafana/grafana-enterprise
+
+
+docker run -d -it --network minhazul-net --name node-exporter -v "%DOCKER_VOLUMES_ROOT%/prometheus/node-exporter/:/host:ro,rslave" quay.io/prometheus/node-exporter:latest --path.rootfs=/host
+
+sudo docker run -d -it --network minhazul-net --name=cadvisor --volume=%DOCKER_VOLUMES_ROOT%/prometheus/cadvisor/:/rootfs:ro --volume=%DOCKER_VOLUMES_ROOT%/prometheus/cadvisor/var/run:/var/run:ro --volume=%DOCKER_VOLUMES_ROOT%/prometheus/cadvisor/sys:/sys:ro --volume=%DOCKER_VOLUMES_ROOT%/prometheus/cadvisor/var/lib/docker/:/var/lib/docker:ro --volume=%DOCKER_VOLUMES_ROOT%/prometheus/cadvisor/dev/disk/:/dev/disk:ro --publish=8080:8080 --detach=true --name=cadvisor --privileged gcr.io/cadvisor/cadvisor
