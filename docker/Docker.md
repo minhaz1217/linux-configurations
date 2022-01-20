@@ -181,8 +181,80 @@ docker run -d -it --network minhazul-net --name node-exporter -v "%DOCKER_VOLUME
 
 sudo docker run -d -it --network minhazul-net --name=cadvisor --volume=%DOCKER_VOLUMES_ROOT%/prometheus/cadvisor/:/rootfs:ro --volume=%DOCKER_VOLUMES_ROOT%/prometheus/cadvisor/var/run:/var/run:ro --volume=%DOCKER_VOLUMES_ROOT%/prometheus/cadvisor/sys:/sys:ro --volume=%DOCKER_VOLUMES_ROOT%/prometheus/cadvisor/var/lib/docker/:/var/lib/docker:ro --volume=%DOCKER_VOLUMES_ROOT%/prometheus/cadvisor/dev/disk/:/dev/disk:ro --publish=8080:8080 --detach=true --name=cadvisor --privileged gcr.io/cadvisor/cadvisor
 
+# Loki
+wget https://raw.githubusercontent.com/grafana/loki/v2.4.2/cmd/loki/loki-local-config.yaml -O loki-config.yaml
+`docker run -d -it --network minhazul-net --name loki -v $DOCKER_VOLUMES_ROOT/loki:/mnt/config grafana/loki:2.4.2 -config.file=/mnt/config/loki-config.yaml`
+
+```loki-config.yaml
+auth_enabled: false
+
+server:
+  http_listen_port: 3100
+  grpc_listen_port: 9096
+
+common:
+  path_prefix: /tmp/loki
+  storage:
+    filesystem:
+      chunks_directory: /tmp/loki/chunks
+      rules_directory: /tmp/loki/rules
+  replication_factor: 1
+  ring:
+    instance_addr: 127.0.0.1
+    kvstore:
+      store: inmemory
+
+schema_config:
+  configs:
+    - from: 2020-10-24
+      store: boltdb-shipper
+      object_store: filesystem
+      schema: v11
+      index:
+        prefix: index_
+        period: 24h
+
+ruler:
+  alertmanager_url: http://alertmanager:9093
+
+```
 
 
+# Promtail 
+wget https://raw.githubusercontent.com/grafana/loki/v2.4.2/clients/cmd/promtail/promtail-docker-config.yaml -O promtail-config.yaml
+`docker run -it -d --network minhazul-net --name promtail -v $DOCKER_VOLUMES_ROOT/promtail:/mnt/config -v /var/log:/var/log  grafana/promtail:2.4.2 -config.file=/mnt/config/promtail-config.yaml`
 
 
+`docker plugin install grafana/loki-docker-driver:latest --alias loki --grant-all-permissions`
+sudo nano /etc/docker/daemon.json
 
+```promtail-config.yaml
+server:
+  http_listen_port: 9080
+  grpc_listen_port: 0
+
+positions:
+  filename: /tmp/positions.yaml
+
+clients:
+  - url: http://loki:3100/loki/api/v1/push
+
+scrape_configs:
+- job_name: system
+  static_configs:
+  - targets:
+      - localhost
+    labels:
+      job: varlogs
+      __path__: /var/log/*log
+
+scrape_configs:
+- job_name: docker
+  pipeline_stages:
+    - docker: {}
+  static_configs:
+    - labels:
+      job: docker
+      __path__: /var/lib/docker/containers/*/*-json.log
+
+```
