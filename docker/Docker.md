@@ -9,7 +9,10 @@ https://hub.docker.com/_/mysql
 
 
 # Postgres
-`docker run --name postgres -p 5432:5432 -v %DOCKER_VOLUMES_ROOT%/postgres:/var/lib/postgresql/data -e POSTGRES_USER=minhaz -e POSTGRES_PASSWORD=minhaz -e PGDATA=/var/lib/postgresql/data/pgdata -d postgres:latest`
+`docker run --name postgres --network minhazul-net -p 5432:5432 -v $DOCKER_VOLUMES_ROOT/postgres:/var/lib/postgresql/data -e POSTGRES_USER=minhaz -e POSTGRES_PASSWORD=minhaz -e PGDATA=/var/lib/postgresql/data/pgdata -d postgres:latest`
+
+# PgAdmin
+`docker run -dit --name pgadmin --network minhazul-net -e PGADMIN_DEFAULT_EMAIL=minhaz@minhazul.com -e PGADMIN_DEFAULT_PASSWORD=minhaz dpage/pgadmin4`
 
 # MongoDB
 `docker run --name mongo -p 27017:27017 -v %DOCKER_VOLUMES_ROOT%/mongodb:/data/db -e MONGO_INITDB_ROOT_USERNAME=mongoadmin -e MONGO_INITDB_ROOT_PASSWORD=minhaz -d mongo`
@@ -137,7 +140,7 @@ docker exec nginx nginx -s reload
 
 # Nginx Proxy Manager
 
-`docker run --name nginx_proxymanager --net-alias nginx_proxymanager -v %DOCKER_VOLUMES_ROOT%/nginx_proxymanager/:/data -v %DOCKER_VOLUMES_ROOT%/nginx_proxymanager/letsencrypt:/etc/letsencrypt -p 80:80 -p 443:443 -p 81:81 --network minhazul-net -d jc21/nginx-proxy-manager:latest`
+`docker run --name nproxy --net-alias nginx_proxymanager -v $DOCKER_VOLUMES_ROOT/nginx_proxymanager/:/data -v $DOCKER_VOLUMES_ROOT/nginx_proxymanager/letsencrypt:/etc/letsencrypt -p 80:80 -p 443:443 -p 81:81 --network minhazul-net -d jc21/nginx-proxy-manager:latest`
 
 ## Create a network
 docker network create -d bridge minhazul-net
@@ -151,6 +154,8 @@ docker run --name adminer -p 8006:8080 -it -d adminer
 # Mongo compass
 docker run -it -d --name mongo-express -p 8007:8081 -e ME_CONFIG_OPTIONS_EDITORTHEME="ambiance" -e ME_CONFIG_MONGODB_SERVER="172.17.0.1" -e ME_CONFIG_MONGODB_ADMINUSERNAME="mongoadmin" -e ME_CONFIG_MONGODB_ADMINPASSWORD="minhaz" -e ME_CONFIG_BASICAUTH_USERNAME="mongominhaz" -e ME_CONFIG_BASICAUTH_PASSWORD="minhaz" mongo-express
 
+# Etherpad
+`docker run -dit --name etherpad --network minhazul-net -e DB_TYPE=postgres -e DB_HOST=postgres -e DB_PORT=5432 -e DB_NAME=etherpad -e DB_USER=minhaz -e DB_PASS=minhaz etherpad/etherpad`
 
 # Proxy SQL
 `docker run -it -d --name proxysql --network minhazul-net -p 16032:6032 -p 16033:6033 -p 16070:6070 -d -v %DOCKER_VOLUMES_ROOT%/proxysql/proxysql.cnf:/etc/proxysql.cnf -v %DOCKER_VOLUMES_ROOT%/proxysql/data:/var/lib/proxysql proxysql/proxysql`
@@ -183,7 +188,7 @@ sudo docker run -d -it --network minhazul-net --name=cadvisor --volume=%DOCKER_V
 
 # Loki
 wget https://raw.githubusercontent.com/grafana/loki/v2.4.2/cmd/loki/loki-local-config.yaml -O loki-config.yaml
-`docker run -d -it --network minhazul-net --name loki -v $DOCKER_VOLUMES_ROOT/loki:/mnt/config grafana/loki:2.4.2 -config.file=/mnt/config/loki-config.yaml`
+`docker run -d -it --network minhazul-net --name loki -v $DOCKER_VOLUMES_ROOT/loki:/mnt/config -v $DOCKER_VOLUMES_ROOT/loki/data:/tmp/loki grafana/loki:2.4.2 -config.file=/mnt/config/loki-config.yaml`
 
 ```loki-config.yaml
 auth_enabled: false
@@ -206,17 +211,13 @@ common:
 
 schema_config:
   configs:
-    - from: 2020-10-24
+    - from: 2020-01-19
       store: boltdb-shipper
       object_store: filesystem
       schema: v11
       index:
         prefix: index_
         period: 24h
-
-ruler:
-  alertmanager_url: http://alertmanager:9093
-
 ```
 
 
@@ -239,6 +240,7 @@ positions:
 clients:
   - url: http://loki:3100/loki/api/v1/push
 
+# System logs
 scrape_configs:
 - job_name: system
   static_configs:
@@ -248,12 +250,14 @@ scrape_configs:
       job: varlogs
       __path__: /var/log/*log
 
-scrape_configs:
+# Docker logs
 - job_name: docker
   pipeline_stages:
     - docker: {}
   static_configs:
-    - labels:
+  - targets:
+      - localhost
+    labels:
       job: docker
       __path__: /var/lib/docker/containers/*/*-json.log
 
