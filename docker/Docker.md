@@ -108,10 +108,11 @@ docker cp tmp-nginx-container:/etc/nginx/nginx.conf %DOCKER_VOLUMES_ROOT%/nginx/
 docker rm -f tmp-nginx-container
 
 ## Run the nginx
-docker run --name nginx --net-alias nginx -v %DOCKER_VOLUMES_ROOT%/nginx/nginx:/etc/nginx -v %DOCKER_VOLUMES_ROOT%/nginx/cert:/etc/ssl/private -p 80:80 -p 443:443 --network minhazul-net -d nginx
+`docker run --name nginx --net-alias nginx -v %DOCKER_VOLUMES_ROOT%/nginx/nginx:/etc/nginx -v %DOCKER_VOLUMES_ROOT%/nginx/cert:/etc/ssl/private -p 80:80 -p 443:443 --network minhazul-net -d nginx`
 
 ## After run
 mkdir %DOCKER_VOLUMES_ROOT%/nginx/nginx/conf.d/sites-available
+
 mkdir %DOCKER_VOLUMES_ROOT%/nginx/nginx/conf.d/sites-enabled
 
 ## Create file in sites-available named plex.conf
@@ -132,16 +133,26 @@ server {
 ln -s ../sites-available/portfolio.conf .
 
 ## Open nginx.conf in /nginx folder
-## Replace include /etc/nginx/conf.d/*.conf; to `include /etc/nginx/conf.d/sites-enabled/*.conf;`
+
+### Replace include /etc/nginx/conf.d/*.conf; to `include /etc/nginx/conf.d/sites-enabled/*.conf;`
 
 ## Run these commands
 docker exec nginx nginx -t
+
 docker exec nginx nginx -s reload
 
 # Nginx Proxy Manager
 
-`docker run --name nproxy --net-alias nginx_proxymanager -v $DOCKER_VOLUMES_ROOT/nginx_proxymanager/:/data -v $DOCKER_VOLUMES_ROOT/nginx_proxymanager/letsencrypt:/etc/letsencrypt -p 80:80 -p 443:443 -p 81:81 --network minhazul-net -d jc21/nginx-proxy-manager:latest`
+`docker run --name nproxy --net-alias nginx_proxymanager -v $DOCKER_VOLUMES_ROOT/nginx_proxymanager/:/data -v $DOCKER_VOLUMES_ROOT/nginx_proxymanager/letsencrypt:/etc/letsencrypt -p 80:80 -p 443:443 -p 81:81 --network minhazul-net -dit jc21/nginx-proxy-manager:latest`
 
+## To create a symlink
+`ln -sf /path/to/file /path/to/symlink`
+
+`ln -sf /etc/letsencrypt/live/minhazul.com/privkey.pem ~/database/nginx_proxymanager/custom_ssl/npm-1/privkey.pem`
+`ln -sf /etc/letsencrypt/live/minhazul.com/fullchain.pem ~/database/nginx_proxymanager/custom_ssl/npm-1/fullchain.pem`
+
+
+docker pull jc21/nginx-proxy-manager:github-develop
 ## Create a network
 docker network create -d bridge minhazul-net
 
