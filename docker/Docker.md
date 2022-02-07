@@ -1,9 +1,10 @@
-set DOCKER_VOLUMES_ROOT=D:/MyComputer/database
-export DOCKER_VOLUMES_ROOT=$HOME/database
+`set DOCKER_VOLUMES_ROOT=D:/MyComputer/database` \
+`export DOCKER_VOLUMES_ROOT=$HOME/database`
 
 
 # MySQL
-https://hub.docker.com/_/mysql
+[Source](https://hub.docker.com/_/mysql)
+
 
 `docker run --name mysql -p 3306:3306 -v %DOCKER_VOLUMES_ROOT%/mysql:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=minhaz -d mysql:latest`
 
@@ -19,8 +20,7 @@ https://hub.docker.com/_/mysql
 
 # General docker commands
 ## See logs:
-`docker exec -it some-mongo bash`
-
+`docker exec -it some-mongo bash` \
 `docker logs some-mongo`
 
 # Neo4j
@@ -30,13 +30,15 @@ https://hub.docker.com/_/mysql
 data02:/usr/share/elasticsearch/data
 
 `docker run -d --name elasticsearch -v %DOCKER_VOLUMES_ROOT%/elasticsearch:/usr/share/elasticsearch/data -p 9200:9200 -p 9300:9300 -e "discovery.type=single-node" docker.elastic.co/elasticsearch/elasticsearch:7.15.1`
+
 ## backup elastic search
 ### 1. Register a repository
-yum install nano
-nano /usr/share/elasticsearch/config/elasticsearch.yml
+yum install nano \
+nano /usr/share/elasticsearch/config/elasticsearch.yml \
 path.repo: ["/usr/share/elasticsearch/data/backups"]
 
 
+```
 PUT /_snapshot/my_backup
 {
   "type" : "fs",
@@ -44,7 +46,9 @@ PUT /_snapshot/my_backup
     "location" : "/usr/share/elasticsearch/data/backups/newbackup"
   }
 }
-GET /_snapshot/_all
+```
+
+#### GET /_snapshot/_all
 
 ### 2. create a repository in the same location as repo.path
 ```
@@ -58,15 +62,18 @@ PUT /_snapshot/my_backup
 ```
 
 ### 3. creating snapshot
-PUT /_snapshot/my_backup/snapshot_name?wait_for_completion=true
+`PUT /_snapshot/my_backup/snapshot_name?wait_for_completion=true`
 
-PUT /_snapshot/my_backup/<snapshot-{now/d}>
-PUT /_snapshot/my_backup/%3Csnapshot-%7Bnow%2Fd%7D%3E?wait_for_completion=true
+```PUT /_snapshot/my_backup/<snapshot-{now/d}>``` \
+```PUT /_snapshot/my_backup/%3Csnapshot-%7Bnow%2Fd%7D%3E?wait_for_completion=true```
 
 ### 4. find the snapshots
-GET /_snapshot
-GET /_snapshot/_all
-GET /_snapshot/my_backup
+`GET /_snapshot`
+
+`GET /_snapshot/_all`
+
+`GET /_snapshot/my_backup`
+
 GET /_snapshot/my_backup/_all
 GET /_snapshot/my_backup/_current
 GET /_snapshot/_status
@@ -101,21 +108,23 @@ mongodb://mongoadmin:minhaz@172.17.0.3:27017/grandnode2?authSource=admin&readPre
 
 # Nginx
 ## First copy the nginx config file from a temp container
-mkdir %DOCKER_VOLUMES_ROOT%/nginx/nginx/
+`mkdir %DOCKER_VOLUMES_ROOT%/nginx/nginx/`
+```
 docker run --name tmp-nginx-container -d nginx
 docker cp tmp-nginx-container:/etc/nginx/ %DOCKER_VOLUMES_ROOT%/nginx/
 docker cp tmp-nginx-container:/etc/nginx/nginx.conf %DOCKER_VOLUMES_ROOT%/nginx/nginx
 docker rm -f tmp-nginx-container
-
+```
 ## Run the nginx
 `docker run --name nginx --net-alias nginx -v %DOCKER_VOLUMES_ROOT%/nginx/nginx:/etc/nginx -v %DOCKER_VOLUMES_ROOT%/nginx/cert:/etc/ssl/private -p 80:80 -p 443:443 --network minhazul-net -d nginx`
 
 ## After run
-mkdir %DOCKER_VOLUMES_ROOT%/nginx/nginx/conf.d/sites-available
+`mkdir %DOCKER_VOLUMES_ROOT%/nginx/nginx/conf.d/sites-available`
 
-mkdir %DOCKER_VOLUMES_ROOT%/nginx/nginx/conf.d/sites-enabled
+`mkdir %DOCKER_VOLUMES_ROOT%/nginx/nginx/conf.d/sites-enabled`
 
 ## Create file in sites-available named plex.conf
+```
 upstream plex {
   server        plex:32400;
 }
@@ -128,18 +137,18 @@ server {
     proxy_pass  http://plex;
   }
 }
-
+```
 ## Go into sites-enabled open bash
-ln -s ../sites-available/portfolio.conf .
+`ln -s ../sites-available/portfolio.conf .`
 
 ## Open nginx.conf in /nginx folder
 
 ### Replace include /etc/nginx/conf.d/*.conf; to `include /etc/nginx/conf.d/sites-enabled/*.conf;`
 
 ## Run these commands
-docker exec nginx nginx -t
+`docker exec nginx nginx -t`
 
-docker exec nginx nginx -s reload
+`docker exec nginx nginx -s reload`
 
 # Nginx Proxy Manager
 
@@ -152,18 +161,18 @@ docker exec nginx nginx -s reload
 `ln -sf /etc/letsencrypt/live/minhazul.com/fullchain.pem ~/database/nginx_proxymanager/custom_ssl/npm-1/fullchain.pem`
 
 
-docker pull jc21/nginx-proxy-manager:github-develop
+`docker pull jc21/nginx-proxy-manager:github-develop`
 ## Create a network
-docker network create -d bridge minhazul-net
+`docker network create -d bridge minhazul-net`
 
 ## Localhost ip from inside the docker
-172.17.0.1
+`172.17.0.1`
 
 # Adminer
-docker run --name adminer -p 8006:8080 -it -d adminer
+`docker run --name adminer -p 8006:8080 -it -d adminer`
 
 # Mongo compass
-docker run -it -d --name mongo-express -p 8007:8081 -e ME_CONFIG_OPTIONS_EDITORTHEME="ambiance" -e ME_CONFIG_MONGODB_SERVER="172.17.0.1" -e ME_CONFIG_MONGODB_ADMINUSERNAME="mongoadmin" -e ME_CONFIG_MONGODB_ADMINPASSWORD="minhaz" -e ME_CONFIG_BASICAUTH_USERNAME="mongominhaz" -e ME_CONFIG_BASICAUTH_PASSWORD="minhaz" mongo-express
+`docker run -it -d --name mongo-express -p 8007:8081 -e ME_CONFIG_OPTIONS_EDITORTHEME="ambiance" -e ME_CONFIG_MONGODB_SERVER="172.17.0.1" -e ME_CONFIG_MONGODB_ADMINUSERNAME="mongoadmin" -e ME_CONFIG_MONGODB_ADMINPASSWORD="minhaz" -e ME_CONFIG_BASICAUTH_USERNAME="mongominhaz" -e ME_CONFIG_BASICAUTH_PASSWORD="minhaz" mongo-express`
 
 # Etherpad
 `docker run -dit --name etherpad --network minhazul-net -e DB_TYPE=postgres -e DB_HOST=postgres -e DB_PORT=5432 -e DB_NAME=etherpad -e DB_USER=minhaz -e DB_PASS=minhaz etherpad/etherpad`
@@ -178,7 +187,7 @@ docker run -it -d --name mongo-express -p 8007:8081 -e ME_CONFIG_OPTIONS_EDITORT
 `docker run -p 9090:9090 -v %DOCKER_VOLUMES_ROOT%/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml prom/prometheus`
 
 
-docker run -d -it --network minhazul-net --name=prometheus -p 9090:9090 -v %DOCKER_VOLUMES_ROOT%/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml -v %DOCKER_VOLUMES_ROOT%/prometheus/data:/prometheus/ prom/prometheus
+`docker run -d -it --network minhazul-net --name=prometheus -p 9090:9090 -v %DOCKER_VOLUMES_ROOT%/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml -v %DOCKER_VOLUMES_ROOT%/prometheus/data:/prometheus/ prom/prometheus`
 
 ## Prometheus - Node exporter
 `docker run -d -it --network minhazul-net --name=node-exporter -v "/:/host:ro,rslave" quay.io/prometheus/node-exporter:latest --path.rootfs=/host`
@@ -187,21 +196,25 @@ docker run -d -it --network minhazul-net --name=prometheus -p 9090:9090 -v %DOCK
 `sudo docker run --network minhazul-net --name=cadvisor --volume=/:/rootfs:ro --volume=/var/run:/var/run:ro --volume=/sys:/sys:ro --volume=/var/lib/docker/:/var/lib/docker:ro --volume=/dev/disk/:/dev/disk:ro --detach=true  --privileged --device=/dev/kmsg gcr.io/cadvisor/cadvisor`
 
 # Grafana
-echo $UID
+`echo $UID`
+
 `docker run -d -it --network minhazul-net --name=grafana -e "GF_INSTALL_PLUGINS=grafana-clock-panel,grafana-simple-json-datasource"  grafana/grafana-oss`
 
-docker run -d -it --network minhazul-net --name=grafana -p 9001:3000 -v $DOCKER_VOLUMES_ROOT/grafana:/var/lib/grafana -e "GF_INSTALL_PLUGINS=grafana-clock-panel,grafana-simple-json-datasource"  grafana/grafana-enterprise
+`docker run -d -it --network minhazul-net --name=grafana -p 9001:3000 -v $DOCKER_VOLUMES_ROOT/grafana:/var/lib/grafana -e "GF_INSTALL_PLUGINS=grafana-clock-panel,grafana-simple-json-datasource"  grafana/grafana-enterprise`
 
 
-docker run -d -it --network minhazul-net --name node-exporter -v "%DOCKER_VOLUMES_ROOT%/prometheus/node-exporter/:/host:ro,rslave" quay.io/prometheus/node-exporter:latest --path.rootfs=/host
+`docker run -d -it --network minhazul-net --name node-exporter -v "%DOCKER_VOLUMES_ROOT%/prometheus/node-exporter/:/host:ro,rslave" quay.io/prometheus/node-exporter:latest --path.rootfs=/host`
 
-sudo docker run -d -it --network minhazul-net --name=cadvisor --volume=%DOCKER_VOLUMES_ROOT%/prometheus/cadvisor/:/rootfs:ro --volume=%DOCKER_VOLUMES_ROOT%/prometheus/cadvisor/var/run:/var/run:ro --volume=%DOCKER_VOLUMES_ROOT%/prometheus/cadvisor/sys:/sys:ro --volume=%DOCKER_VOLUMES_ROOT%/prometheus/cadvisor/var/lib/docker/:/var/lib/docker:ro --volume=%DOCKER_VOLUMES_ROOT%/prometheus/cadvisor/dev/disk/:/dev/disk:ro --publish=8080:8080 --detach=true --name=cadvisor --privileged gcr.io/cadvisor/cadvisor
+`sudo docker run -d -it --network minhazul-net --name=cadvisor --volume=%DOCKER_VOLUMES_ROOT%/prometheus/cadvisor/:/rootfs:ro --volume=%DOCKER_VOLUMES_ROOT%/prometheus/cadvisor/var/run:/var/run:ro --volume=%DOCKER_VOLUMES_ROOT%/prometheus/cadvisor/sys:/sys:ro --volume=%DOCKER_VOLUMES_ROOT%/prometheus/cadvisor/var/lib/docker/:/var/lib/docker:ro --volume=%DOCKER_VOLUMES_ROOT%/prometheus/cadvisor/dev/disk/:/dev/disk:ro --publish=8080:8080 --detach=true --name=cadvisor --privileged gcr.io/cadvisor/cadvisor`
 
 # Loki
-wget https://raw.githubusercontent.com/grafana/loki/v2.4.2/cmd/loki/loki-local-config.yaml -O loki-config.yaml
+`wget https://raw.githubusercontent.com/grafana/loki/v2.4.2/cmd/loki/loki-local-config.yaml -O loki-config.yaml`
+
 `docker run -d -it --network minhazul-net --name loki -v $DOCKER_VOLUMES_ROOT/loki:/mnt/config -v $DOCKER_VOLUMES_ROOT/loki/data:/tmp/loki grafana/loki:2.4.2 -config.file=/mnt/config/loki-config.yaml`
 
-```loki-config.yaml
+
+#### loki-config.yaml
+```
 auth_enabled: false
 
 server:
@@ -233,14 +246,16 @@ schema_config:
 
 
 # Promtail 
-wget https://raw.githubusercontent.com/grafana/loki/v2.4.2/clients/cmd/promtail/promtail-docker-config.yaml -O promtail-config.yaml
+`wget https://raw.githubusercontent.com/grafana/loki/v2.4.2/clients/cmd/promtail/promtail-docker-config.yaml -O promtail-config.yaml`
+
 `docker run -it -d --network minhazul-net --name promtail -v $DOCKER_VOLUMES_ROOT/promtail:/mnt/config -v /var/log:/var/log  grafana/promtail:2.4.2 -config.file=/mnt/config/promtail-config.yaml`
 
 
 `docker plugin install grafana/loki-docker-driver:latest --alias loki --grant-all-permissions`
-sudo nano /etc/docker/daemon.json
+`sudo nano /etc/docker/daemon.json`
 
-```promtail-config.yaml
+#### promtail-config.yaml
+```
 server:
   http_listen_port: 9080
   grpc_listen_port: 0
