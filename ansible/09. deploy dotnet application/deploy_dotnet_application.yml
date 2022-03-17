@@ -1,0 +1,41 @@
+- name: Deploying dotnet core application
+  hosts: [amazon]
+  become: true
+
+  tasks:
+  - name: Copy the files.
+    ansible.builtin.copy:
+      src: "/mnt/d/MyComputer/website/c#/dotnet-6-bootcamp/bin/Release/net6.0/"
+      dest: "/home/ubuntu/dotnet-6-bootcamp/"
+
+# Here i tried to create a startup.sh file and then run it.
+  # - name: Make the startup.sh
+  #   ansible.builtin.copy:
+  #     dest: "/home/ubuntu/dotnet-6-bootcamp/startup.sh"
+  #     content: |
+  #       sudo lsof -ti:5000 | sudo xargs kill
+  #       sudo nohup dotnet WebApi_2022.dll &
+  #     mode: +x
+
+  # - name : Run the bash file
+  #   raw: /home/ubuntu/dotnet-6-bootcamp/startup.sh
+  #   args:
+  #     executable: /bin/bash    
+    
+# Here we kill a process depending on which port that post is bound to and run an dotnet application.
+  - name: Kill the running process
+    shell: "sudo lsof -ti:5000 | sudo xargs kill"
+    become: yes
+    ignore_errors: yes
+
+
+  - name: Run the dotnet application
+    shell: "sudo nohup dotnet /home/ubuntu/dotnet-6-bootcamp/WebApi_2022.dll </dev/null >/dev/null 2>&1 &"
+    become: yes
+    ignore_errors: yes
+
+  - name: Make get request to validate that the service is up
+    uri:
+      url: https://localhost:5001/status
+      method: GET
+      validate_certs: no
