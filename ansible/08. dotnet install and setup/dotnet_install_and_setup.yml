@@ -1,0 +1,11 @@
+- name: Installing dotnet core
+  hosts: [amazon]
+  become: true
+
+  tasks:
+  - name: Install DotNetCore
+    snap:
+      name: dotnet-sdk 
+      channel: 3.1
+      classic: yes
+      state: present
