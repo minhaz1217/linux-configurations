@@ -1,5 +1,9 @@
 `set DOCKER_VOLUMES_ROOT=D:/MyComputer/database` \
 `export DOCKER_VOLUMES_ROOT=$HOME/database`
+`export DOCKER_VOLUMES_ROOT=D:/MyComputer/database`
+
+# Busybox
+`docker run -it --rm busybox`
 
 
 # MySQL
