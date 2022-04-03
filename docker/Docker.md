@@ -1,6 +1,12 @@
-`set DOCKER_VOLUMES_ROOT=D:/MyComputer/database` \
+`set DOCKER_VOLUMES_ROOT=D:/MyComputer/database`
+
 `export DOCKER_VOLUMES_ROOT=$HOME/database`
+
 `export DOCKER_VOLUMES_ROOT=D:/MyComputer/database`
+
+`echo %DOCKER_VOLUMES_ROOT%`
+
+`echo $DOCKER_VOLUMES_ROOT`
 
 # Busybox
 `docker run -it --rm busybox`
@@ -292,3 +298,25 @@ scrape_configs:
       __path__: /var/lib/docker/containers/*/*-json.log
 
 ```
+
+# Jenkins
+`docker run --name jenkins -p 8080:8080 -p 50000:50000 -dit -v %DOCKER_VOLUMES_ROOT%/jenkins/data:/var/jenkins_home jenkins/jenkins:lts-jdk11`
+
+### Run this to see the secret key for admin access at `localhost:8080`
+`docker exec jenkins cat /var/jenkins_home/secrets/initialAdminPassword`
+
+
+<!-- `docker network create jenkins`
+
+`docker run --name jenkins-docker -dit --privileged --network jenkins --network-alias docker --env DOCKER_TLS_CERTDIR=/certs --volume %DOCKER_VOLUMES_ROOT%/jenkins/certs:/certs --volume %DOCKER_VOLUMES_ROOT%/jenkins/data:/var/jenkins_home --publish 2376:2376 docker:dind --storage-driver overlay2`
+
+
+`openssl ca -config openssl.cnf -extensions client -batch -out test.cert`
+
+`sudo openssl x509 -outform der -in cert.pem -out cert.crt`
+
+openssl req -x509 -sha256 -nodes -newkey rsa:2048 -days 365 -keyout localhost.key -out localhost.crt
+
+
+openssl genrsa -out client.key 4096   
+openssl req -new -x509 -text -key client.key -out client.cert -->
