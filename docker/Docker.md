@@ -300,7 +300,7 @@ scrape_configs:
 ```
 
 # Jenkins
-`docker run --name jenkins -p 8080:8080 -p 50000:50000 -dit -v %DOCKER_VOLUMES_ROOT%/jenkins/data:/var/jenkins_home jenkins/jenkins:lts-jdk11`
+`docker run --name jenkins -p 8081:8080 -p 50000:50000 -dit -v %DOCKER_VOLUMES_ROOT%/jenkins/data:/var/jenkins_home jenkins/jenkins:lts-jdk11`
 
 ### Run this to see the secret key for admin access at `localhost:8080`
 `docker exec jenkins cat /var/jenkins_home/secrets/initialAdminPassword`
