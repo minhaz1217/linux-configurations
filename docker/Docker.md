@@ -320,3 +320,18 @@ openssl req -x509 -sha256 -nodes -newkey rsa:2048 -days 365 -keyout localhost.ke
 
 openssl genrsa -out client.key 4096   
 openssl req -new -x509 -text -key client.key -out client.cert -->
+
+# OpenVPN
+## At first create a volume and generate necessary files in it
+`sudo docker run -v $DOCKER_VOLUMES_ROOT/openvpn:/etc/openvpn --rm kylemanna/openvpn ovpn_genconfig -u udp://vpn.minhazul.com`
+
+`sudo docker run -v $DOCKER_VOLUMES_ROOT/openvpn:/etc/openvpn --rm -it kylemanna/openvpn ovpn_initpki`
+
+## Start the openvpn
+`sudo docker run --name openvpn -v $DOCKER_VOLUMES_ROOT/openvpn:/etc/openvpn -dit -p 1194:1194/udp --cap-add=NET_ADMIN kylemanna/openvpn`
+
+## Generate client config
+`sudo docker run -v $DOCKER_VOLUMES_ROOT/openvpn:/etc/openvpn --rm -it kylemanna/openvpn easyrsa build-client-full darkvision nopass`
+
+## Retrive the generated file
+`sudo docker run -v $DOCKER_VOLUMES_ROOT/openvpn:/etc/openvpn --rm kylemanna/openvpn ovpn_getclient darkvision > darkvision.ovpn`
