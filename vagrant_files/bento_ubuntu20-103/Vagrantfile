@@ -3,22 +3,20 @@
 
 Vagrant.configure("2") do |config|
   config.vm.box = "bento/ubuntu-20.04"
-  config.disksize.size = '10GB'
-  config.vm.synced_folder "C:/website/", "/home/vagrant/website",
+  # config.disksize.size = '10GB'
+  config.vm.synced_folder "D:/MyComputer/website", "/home/vagrant/website",
 	  owner: "vagrant",
 	  group: "vagrant",
     mount_options: ["dmode=775,fmode=664"]
     
-  config.vm.network "private_network", ip: "192.168.50.103"
+  config.vm.network "private_network", ip: "10.10.10.103"
 
-  config.vm.network "forwarded_port", guest: 8010, host: 8010
-  config.vm.network "forwarded_port", guest: 5000, host:5000
-  config.vm.network "forwarded_port", guest: 80, host:80
-  config.vm.network "forwarded_port", guest: 7001, host:7001
-  config.vm.network "forwarded_port", guest: 7002, host:7002
-  config.vm.network "forwarded_port", guest: 7003, host:7003
-  config.vm.network "forwarded_port", guest: 7004, host:7004
-  config.vm.network "forwarded_port", guest: 7005, host:7005
+  # config.vm.network "forwarded_port", guest: 8040, host: 8040
+  # config.vm.network "forwarded_port", guest: 8041, host: 8041
+  # config.vm.network "forwarded_port", guest: 8042, host: 8042
+  # config.vm.network "forwarded_port", guest: 8043, host: 8043
+  # config.vm.network "forwarded_port", guest: 8044, host: 8044
+  # config.vm.network "forwarded_port", guest: 8045, host: 8045
 
   config.vm.provider "virtualbox" do |vb|
     # Display the VirtualBox GUI when booting the machine
