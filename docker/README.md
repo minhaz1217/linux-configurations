@@ -335,3 +335,7 @@ openssl req -new -x509 -text -key client.key -out client.cert -->
 
 ## Retrive the generated file
 `sudo docker run -v $DOCKER_VOLUMES_ROOT/openvpn:/etc/openvpn --rm kylemanna/openvpn ovpn_getclient darkvision > darkvision.ovpn`
+
+# Zookeeper
+### Install using
+`docker run --name zookeeper --restart always -dit -p 4001:2181 -p 4002:2888 -p 4003:3888 -p 4004:8080 -v $DOCKER_VOLUMES_ROOT/zookeeper/conf:/conf -v $DOCKER_VOLUMES_ROOT/zookeeper/data:/data -v $DOCKER_VOLUMES_ROOT/zookeeper/datalog:/datalog zookeeper`
