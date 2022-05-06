@@ -339,3 +339,6 @@ openssl req -new -x509 -text -key client.key -out client.cert -->
 # Zookeeper
 ### Install using
 `docker run --name zookeeper --restart always -dit -p 4001:2181 -p 4002:2888 -p 4003:3888 -p 4004:8080 -v $DOCKER_VOLUMES_ROOT/zookeeper/conf:/conf -v $DOCKER_VOLUMES_ROOT/zookeeper/data:/data -v $DOCKER_VOLUMES_ROOT/zookeeper/datalog:/datalog zookeeper`
+
+### Install using bitnami zookeeper
+`docker run --name zookeeper --rm -it --network zookeeper-ds -p 2181:2181 -e  ALLOW_ANONYMOUS_LOGIN=yes bitnami/zookeeper:latest`
