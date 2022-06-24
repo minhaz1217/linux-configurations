@@ -26,7 +26,7 @@
 `docker run -dit --name pgadmin --network minhazul-net -e PGADMIN_DEFAULT_EMAIL=minhaz@minhazul.com -e PGADMIN_DEFAULT_PASSWORD=minhaz dpage/pgadmin4`
 
 # MongoDB
-`docker run --name mongo -p 27017:27017 -v %DOCKER_VOLUMES_ROOT%/mongodb:/data/db -e MONGO_INITDB_ROOT_USERNAME=mongoadmin -e MONGO_INITDB_ROOT_PASSWORD=minhaz -d mongo`
+`docker run --name mongo -p 27017:27017 -v %DOCKER_VOLUMES_ROOT%/mongodb:/data/db -e MONGO_INITDB_ROOT_USERNAME=mongoadmin -e MONGO_INITDB_ROOT_PASSWORD=minhaz --network localhost-network -d mongo`
 
 # General docker commands
 ## See logs:
