@@ -342,3 +342,7 @@ openssl req -new -x509 -text -key client.key -out client.cert -->
 
 ### Install using bitnami zookeeper
 `docker run --name zookeeper --rm -it --network zookeeper-ds -p 2181:2181 -e  ALLOW_ANONYMOUS_LOGIN=yes bitnami/zookeeper:latest`
+
+
+# Code Server
+`docker run --name vscode -dit --network localhost-network -e PASSWORD=hellominhaz123 -p 7001:8080 -v $DOCKER_VOLUMES_ROOT/code-server/.config:/home/coder/.config -v D:/MyComputer/website:/home/coder/projects codercom/code-server`
