@@ -346,3 +346,46 @@ openssl req -new -x509 -text -key client.key -out client.cert -->
 
 # Code Server
 `docker run --name vscode -dit --network localhost-network -e PASSWORD=hellominhaz123 -p 7001:8080 -v $DOCKER_VOLUMES_ROOT/code-server/.config:/home/coder/.config -v D:/MyComputer/website:/home/coder/projects codercom/code-server`
+
+# Rust Server
+```
+version: '3'
+
+networks:
+  minhazul-net:
+    external: true
+    name: minhazul-net
+
+services:
+  hbbs:
+    container_name: hbbs
+    ports:
+      - 21115:21115
+      - 21116:21116
+      - 21116:21116/udp
+      - 21118:21118
+    image: rustdesk/rustdesk-server:latest
+    command: hbbs -r minhazul.com:21117
+    volumes:
+      - ~/database/rust-server/hbbs:/root
+    networks:
+      - minhazul-net
+    depends_on:
+      - hbbr
+    restart: unless-stopped
+
+  hbbr:
+    container_name: hbbr
+    ports:
+      - 21117:21117
+      - 21119:21119
+    image: rustdesk/rustdesk-server:latest
+    command: hbbr
+    volumes:
+      - ~/database/rust-server/hbbr:/root
+    networks:
+      - minhazul-net
+    restart: unless-stopped
+```
+
+### Set up the id and relay server as the host name in the softwares to connect.
