@@ -389,3 +389,22 @@ services:
 ```
 
 ### Set up the id and relay server as the host name in the softwares to connect.
+
+# MSSQL
+`docker run --name mssql -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=Asd123!!" -p 1433:1433 -d mcr.microsoft.com/mssql/server:2019-latest`
+
+### Get into the mssql
+`docker exec -it mssql /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P Asd123!!`
+
+### Get databases 
+
+```
+SELECT Name FROM sys.Databases;
+GO
+```
+
+### Get tables
+```
+SELECT * FROM INFORMATION_SCHEMA.TABLES;
+GO
+```
