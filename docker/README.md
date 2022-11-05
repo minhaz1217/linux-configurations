@@ -411,3 +411,6 @@ GO
 
 # NocoDB
 `docker run -dit --name nocodb --network minhazul-net -v $DOCKER_VOLUMES_ROOT/nocodb:/usr/app/data/ -e NC_DB="pg://postgres:5432?u=minhaz&p=minhaz&d=nocodb" -e NC_AUTH_JWT_SECRET="ae102f21-c03b-4dd8-96a3-6e24959ef0c8" nocodb/nocodb:latest`
+
+# Redis
+`docker run -dit --name redis --network minhazul-net -v $DOCKER_VOLUMES_ROOT/redis:/data -p 6379:6379 redis redis-server --save 60 1 --loglevel warning`
