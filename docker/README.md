@@ -23,7 +23,7 @@
 `docker run --name postgres --network minhazul-net -p 5432:5432 -v $DOCKER_VOLUMES_ROOT/postgres:/var/lib/postgresql/data -e POSTGRES_USER=minhaz -e POSTGRES_PASSWORD=minhaz -e PGDATA=/var/lib/postgresql/data/pgdata -d postgres:latest`
 
 # PgAdmin
-`docker run -dit --name pgadmin --network minhazul-net -e PGADMIN_DEFAULT_EMAIL=minhaz@minhazul.com -e PGADMIN_DEFAULT_PASSWORD=minhaz dpage/pgadmin4`
+`docker run -d --name pgadmin --network minhazul-net -e PGADMIN_DEFAULT_EMAIL=minhaz@minhazul.com -e PGADMIN_DEFAULT_PASSWORD=minhaz dpage/pgadmin4`
 
 # MongoDB
 `docker run --name mongo -p 27017:27017 -v %DOCKER_VOLUMES_ROOT%/mongodb:/data/db -e MONGO_INITDB_ROOT_USERNAME=mongoadmin -e MONGO_INITDB_ROOT_PASSWORD=minhaz --network localhost-network -d mongo`
@@ -414,3 +414,6 @@ GO
 
 # Redis
 `docker run -dit --name redis --network minhazul-net -v $DOCKER_VOLUMES_ROOT/redis:/data -p 6379:6379 redis redis-server --save 60 1 --loglevel warning`
+
+# Portainer
+`docker run -d -p 3082:8000 -p 3092:9443 --name portainer --restart=always -v /var/run/docker.sock:/var/run/docker.sock -v $DOCKER_VOLUMES_ROOT/portainer:/data portainer/portainer-ce:latest`
