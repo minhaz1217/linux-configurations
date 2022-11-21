@@ -416,4 +416,4 @@ GO
 `docker run -dit --name redis --network minhazul-net -v $DOCKER_VOLUMES_ROOT/redis:/data -p 6379:6379 redis redis-server --save 60 1 --loglevel warning`
 
 # Portainer
-`docker run -d -p 3082:8000 -p 3092:9443 --name portainer --restart=always -v /var/run/docker.sock:/var/run/docker.sock -v $DOCKER_VOLUMES_ROOT/portainer:/data portainer/portainer-ce:latest`
+`docker run -d --network minhazul-net --name portainer --restart=always -v /var/run/docker.sock:/var/run/docker.sock -v $DOCKER_VOLUMES_ROOT/portainer:/data portainer/portainer-ce:latest`
