@@ -415,5 +415,8 @@ GO
 # Redis
 `docker run -dit --name redis --network minhazul-net -v $DOCKER_VOLUMES_ROOT/redis:/data -p 6379:6379 redis redis-server --save 60 1 --loglevel warning`
 
+# Redis insight
+`docker run -dit --name redisinsight --network minhazul-net -v $DOCKER_VOLUMES_ROOT/redisinsight:/db redislabs/redisinsight:latest`
+
 # Portainer
 `docker run -d --network minhazul-net --name portainer --restart=always -v /var/run/docker.sock:/var/run/docker.sock -v $DOCKER_VOLUMES_ROOT/portainer:/data portainer/portainer-ce:latest`
