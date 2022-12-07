@@ -26,7 +26,7 @@
 `docker run -d --name pgadmin --network minhazul-net -e PGADMIN_DEFAULT_EMAIL=minhaz@minhazul.com -e PGADMIN_DEFAULT_PASSWORD=minhaz dpage/pgadmin4`
 
 # MongoDB
-`docker run --name mongo -p 27017:27017 -v %DOCKER_VOLUMES_ROOT%/mongodb:/data/db -e MONGO_INITDB_ROOT_USERNAME=mongoadmin -e MONGO_INITDB_ROOT_PASSWORD=minhaz --network localhost-network -d mongo`
+`docker run --name mongo -p 27017:27017 -v $DOCKER_VOLUMES_ROOT/mongodb:/data/db -e MONGO_INITDB_ROOT_USERNAME=mongoadmin -e MONGO_INITDB_ROOT_PASSWORD=minhaz --network minhazul-net -d mongo`
 
 # General docker commands
 ## See logs:
@@ -181,9 +181,6 @@ server {
 # Adminer
 `docker run --name adminer -p 8006:8080 -it -d adminer`
 
-# Mongo compass
-`docker run -it -d --name mongo-express -p 8007:8081 -e ME_CONFIG_OPTIONS_EDITORTHEME="ambiance" -e ME_CONFIG_MONGODB_SERVER="172.17.0.1" -e ME_CONFIG_MONGODB_ADMINUSERNAME="mongoadmin" -e ME_CONFIG_MONGODB_ADMINPASSWORD="minhaz" -e ME_CONFIG_BASICAUTH_USERNAME="mongominhaz" -e ME_CONFIG_BASICAUTH_PASSWORD="minhaz" mongo-express`
-
 # Etherpad
 `docker run -dit --name etherpad --network minhazul-net -e DB_TYPE=postgres -e DB_HOST=postgres -e DB_PORT=5432 -e DB_NAME=etherpad -e DB_USER=minhaz -e DB_PASS=minhaz etherpad/etherpad`
 
@@ -208,9 +205,10 @@ server {
 # Grafana
 `echo $UID`
 
-`docker run -d -it --network minhazul-net --name=grafana -e "GF_INSTALL_PLUGINS=grafana-clock-panel,grafana-simple-json-datasource"  grafana/grafana-oss`
+`sudo docker run -d  --name grafana --network minhazul-net -e "GF_INSTALL_PLUGINS=grafana-clock-panel,grafana-simple-json-datasource"  grafana/grafana-oss`
 
-`docker run -d -it --network minhazul-net --name=grafana -p 9001:3000 -v $DOCKER_VOLUMES_ROOT/grafana:/var/lib/grafana -e "GF_INSTALL_PLUGINS=grafana-clock-panel,grafana-simple-json-datasource"  grafana/grafana-enterprise`
+
+`docker run -d -it --network minhazul-net --name grafana -v $DOCKER_VOLUMES_ROOT/grafana:/var/lib/grafana -e "GF_INSTALL_PLUGINS=grafana-clock-panel,grafana-simple-json-datasource"  grafana/grafana-enterprise`
 
 
 `docker run -d -it --network minhazul-net --name node-exporter -v "%DOCKER_VOLUMES_ROOT%/prometheus/node-exporter/:/host:ro,rslave" quay.io/prometheus/node-exporter:latest --path.rootfs=/host`
@@ -331,7 +329,7 @@ openssl req -new -x509 -text -key client.key -out client.cert -->
 `sudo docker run --name openvpn -v $DOCKER_VOLUMES_ROOT/openvpn:/etc/openvpn -dit -p 1194:1194/udp --cap-add=NET_ADMIN kylemanna/openvpn`
 
 ## Generate client config
-`sudo docker run -v $DOCKER_VOLUMES_ROOT/openvpn:/etc/openvpn --rm -it kylemanna/openvpn easyrsa build-client-full darkvision nopass`
+`sudo docker run -v $DOCKER_VOLUMES_ROOT/openvpn:/etc/openvpn --rm -it kylemanna/openvpn easyrsa build-client-full minhaz-office nopass`
 
 ## Retrive the generated file
 `sudo docker run -v $DOCKER_VOLUMES_ROOT/openvpn:/etc/openvpn --rm kylemanna/openvpn ovpn_getclient darkvision > darkvision.ovpn`
