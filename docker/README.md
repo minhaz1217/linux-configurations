@@ -332,7 +332,7 @@ openssl req -new -x509 -text -key client.key -out client.cert -->
 `sudo docker run -v $DOCKER_VOLUMES_ROOT/openvpn:/etc/openvpn --rm -it kylemanna/openvpn easyrsa build-client-full minhaz-office nopass`
 
 ## Retrive the generated file
-`sudo docker run -v $DOCKER_VOLUMES_ROOT/openvpn:/etc/openvpn --rm kylemanna/openvpn ovpn_getclient darkvision > darkvision.ovpn`
+`sudo docker run -v $DOCKER_VOLUMES_ROOT/openvpn:/etc/openvpn --rm kylemanna/openvpn ovpn_getclient minhaz-office > minhaz-mobile.ovpn`
 
 # Zookeeper
 ### Install using
@@ -418,3 +418,6 @@ GO
 
 # Portainer
 `docker run -d --network minhazul-net --name portainer --restart=always -v /var/run/docker.sock:/var/run/docker.sock -v $DOCKER_VOLUMES_ROOT/portainer:/data portainer/portainer-ce:latest`
+
+
+# 
