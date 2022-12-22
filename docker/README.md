@@ -420,4 +420,5 @@ GO
 `docker run -d --network minhazul-net --name portainer --restart=always -v /var/run/docker.sock:/var/run/docker.sock -v $DOCKER_VOLUMES_ROOT/portainer:/data portainer/portainer-ce:latest`
 
 
-# 
+# Trilium Journal 
+sudo docker run --name trilium -it -p8080:8080 -v $DOCKER_VOLUMES_ROOT/trilium:/home/node/trilium-data zadam/trilium
