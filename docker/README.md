@@ -1,8 +1,12 @@
+# Windows CMD
 `set DOCKER_VOLUMES_ROOT=D:/MyComputer/database`
 
+# Windows bash
+`export DOCKER_VOLUMES_ROOT=D:/MyComputer/database`
+
+# Linux
 `export DOCKER_VOLUMES_ROOT=$HOME/database`
 
-`export DOCKER_VOLUMES_ROOT=D:/MyComputer/database`
 
 `echo %DOCKER_VOLUMES_ROOT%`
 
