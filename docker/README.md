@@ -20,11 +20,13 @@
 [Source](https://hub.docker.com/_/mysql)
 
 
-`docker run --name mysql -p 3306:3306 -v %DOCKER_VOLUMES_ROOT%/mysql:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=minhaz -d mysql:latest`
+`docker run --name mysql -p 3306:3306 -v $DOCKER_VOLUMES_ROOT/mysql:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=minhaz -d mysql:latest`
 
 
 # Postgres
 `docker run --name postgres --network minhazul-net -p 5432:5432 -v $DOCKER_VOLUMES_ROOT/postgres:/var/lib/postgresql/data -e POSTGRES_USER=minhaz -e POSTGRES_PASSWORD=minhaz -e PGDATA=/var/lib/postgresql/data/pgdata -d postgres:latest`
+
+`sudo docker run -dit --name postgres --network minhazul-net -p 5432:5432 --restart always -v $DOCKER_VOLUMES_ROOT/postgres:/var/lib/postgresql/data -e POSTGRES_USER=minhaz -e POSTGRES_PASSWORD=minhaz -e PGDATA=/var/lib/postgresql/data/pgdata postgres:14.6`
 
 # PgAdmin
 `docker run -d --name pgadmin --network minhazul-net -e PGADMIN_DEFAULT_EMAIL=minhaz@minhazul.com -e PGADMIN_DEFAULT_PASSWORD=minhaz dpage/pgadmin4`
@@ -156,7 +158,7 @@ server {
 }
 ```
 ## Go into sites-enabled open bash
-`ln -s ../sites-available/portfolio.conf .`
+`ln -s ../sites-available/portfolio .conf .`
 
 ## Open nginx.conf in /nginx folder
 
@@ -169,10 +171,13 @@ server {
 
 # Nginx Proxy Manager
 
-`docker run --name nproxy --net-alias nginx_proxymanager -v $DOCKER_VOLUMES_ROOT/nginx_proxymanager/:/data -v $DOCKER_VOLUMES_ROOT/nginx_proxymanager/letsencrypt:/etc/letsencrypt -p 80:80 -p 443:443 -p 81:81 --network minhazul-net -dit jc21/nginx-proxy-manager:latest`
+`docker run --name nproxy --restart always -v $DOCKER_VOLUMES_ROOT/nginx_proxymanager/:/data -v $DOCKER_VOLUMES_ROOT/nginx_proxymanager/letsencrypt:/etc/letsencrypt -p 80:80 -p 443:443 -p 81:81 --network minhazul-net -dit jc21/nginx-proxy-manager:latest`
+
+docker run --name nproxy --net-alias nginx_proxymanager -v $HOME/nginx_proxymanager2/:/data -v $HOME/nginx_proxymanager2/letsencrypt:/etc/letsencrypt -p 80:80 -p 443:443 -p 81:81 -p3000:3000 --network minhazul-net -dit jc21/nginx-proxy-manager:latest
 
 ## To create a symlink
 `ln -sf /path/to/file /path/to/symlink`
+
 
 `ln -sf /etc/letsencrypt/live/minhazul.com/privkey.pem ~/database/nginx_proxymanager/custom_ssl/npm-1/privkey.pem`
 `ln -sf /etc/letsencrypt/live/minhazul.com/fullchain.pem ~/database/nginx_proxymanager/custom_ssl/npm-1/fullchain.pem`
@@ -336,10 +341,11 @@ openssl req -new -x509 -text -key client.key -out client.cert -->
 `sudo docker run --name openvpn -v $DOCKER_VOLUMES_ROOT/openvpn:/etc/openvpn -dit -p 1194:1194/udp --cap-add=NET_ADMIN kylemanna/openvpn`
 
 ## Generate client config
-`sudo docker run -v $DOCKER_VOLUMES_ROOT/openvpn:/etc/openvpn --rm -it kylemanna/openvpn easyrsa build-client-full minhaz-office nopass`
+`export vpn_username=minhaz-mobile`
+`sudo docker run -v $DOCKER_VOLUMES_ROOT/openvpn:/etc/openvpn --rm -it kylemanna/openvpn easyrsa build-client-full $vpn_username nopass`
 
 ## Retrive the generated file
-`sudo docker run -v $DOCKER_VOLUMES_ROOT/openvpn:/etc/openvpn --rm kylemanna/openvpn ovpn_getclient minhaz-office > minhaz-mobile.ovpn`
+`sudo docker run -v $DOCKER_VOLUMES_ROOT/openvpn:/etc/openvpn --rm kylemanna/openvpn ovpn_getclient $vpn_username > $vpn_username.ovpn`
 
 # Zookeeper
 ### Install using
