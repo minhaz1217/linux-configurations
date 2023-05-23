@@ -435,3 +435,15 @@ GO
 
 # Trilium Journal 
 sudo docker run --name trilium -it -p8080:8080 -v $DOCKER_VOLUMES_ROOT/trilium:/home/node/trilium-data zadam/trilium
+
+# Seq
+```
+PH=$(echo 'seqPassWord321%%' | docker run --rm -i datalust/seq config hash)
+
+docker run --name seq -d --restart unless-stopped -e ACCEPT_EULA=Y -e SEQ_FIRSTRUN_ADMINPASSWORDHASH="$PH" -v $DOCKER_VOLUMES_ROOT/seq/data:/data -p 5341:5341 datalust/seq
+
+docker run --name seq -d --restart unless-stopped -e ACCEPT_EULA=Y -e SEQ_FIRSTRUN_ADMINPASSWORDHASH="QOl8fDOsBiz82GXF5E87qCrWaogV9dnQIcqdIXCNIEJaf6aFBPZ3DXevxTCWuFRXV7h3yAd2UP2VdzVphbGvpqWDKsus5v2x4eyVWOhT04qc" -v $DOCKER_VOLUMES_ROOT/seq/data:/data -p 5341:5341 datalust/seq
+```
+
+http://localhost:5341/#/dashboards?dashboardId=dashboard-14&range=2h&group=1m&
+refresh=10s&apiKey=QOl8fDOsBiz82GXF5E87qCrWaogV9dnQIcqdIXCNIEJaf6aFBPZ3DXevxTCWuFRXV7h3yAd2UP2VdzVphbGvpqWDKsus5v2x4eyVWOhT04qc&theme=dark-theme&maximized
