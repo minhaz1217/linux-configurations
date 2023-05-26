@@ -447,3 +447,19 @@ docker run --name seq -d --restart unless-stopped -e ACCEPT_EULA=Y -e SEQ_FIRSTR
 
 http://localhost:5341/#/dashboards?dashboardId=dashboard-14&range=2h&group=1m&
 refresh=10s&apiKey=QOl8fDOsBiz82GXF5E87qCrWaogV9dnQIcqdIXCNIEJaf6aFBPZ3DXevxTCWuFRXV7h3yAd2UP2VdzVphbGvpqWDKsus5v2x4eyVWOhT04qc&theme=dark-theme&maximized
+
+
+# SonarQube
+```
+docker run -d --name sonarqube -e SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true -p 9000:9000 -v $DOCKER_VOLUMES_ROOT/sonarqube/data:/opt/sonarqube/data -v $DOCKER_VOLUMES_ROOT/sonarqube/extensions:/opt/sonarqube/extensions -v $DOCKER_VOLUMES_ROOT/sonarqube/logs:/opt/sonarqube/logs sonarqube:latest
+```
+```
+docker run -d --name sonarqube \
+    -p 9000:9000 \
+    -e SONAR_JDBC_URL=... \
+    -e SONAR_JDBC_USERNAME=... \
+    -e SONAR_JDBC_PASSWORD=... \
+    -v sonarqube_data:/opt/sonarqube/data \
+    -v sonarqube_extensions:/opt/sonarqube/extensions \
+    -v sonarqube_logs:/opt/sonarqube/logs \
+```
