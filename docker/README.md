@@ -463,3 +463,8 @@ docker run -d --name sonarqube \
     -v sonarqube_extensions:/opt/sonarqube/extensions \
     -v sonarqube_logs:/opt/sonarqube/logs \
 ```
+
+# Uptime kuma
+```
+docker run -d --restart=always -p 3001:3001 -v $DOCKER_VOLUMES_ROOT/uptime-kuma:/app/data --name uptime-kuma louislam/uptime-kuma:1
+```
