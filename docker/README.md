@@ -466,5 +466,5 @@ docker run -d --name sonarqube \
 
 # Uptime kuma
 ```
-docker run -d --restart=always -p 3001:3001 -v $DOCKER_VOLUMES_ROOT/uptime-kuma:/app/data --name uptime-kuma louislam/uptime-kuma:1
+docker run -d --network minhazul-net --name uptime --restart=always -p 3001:3001 -v $DOCKER_VOLUMES_ROOT/uptime-kuma:/app/data louislam/uptime-kuma:1
 ```
