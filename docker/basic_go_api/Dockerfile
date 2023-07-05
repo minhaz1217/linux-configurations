@@ -9,19 +9,12 @@ RUN mkdir -p $APP_HOME && chown -R $APP_USER:$APP_USER $APP_HOME
 USER $APP_USER
 WORKDIR $APP_HOME
 COPY . .
-RUN go build -o $APP_NAME ./src/main.go
-
-FROM debian:stable-slim
-ENV APP_USER app
+RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o $APP_NAME ./src/main.go
+FROM scratch
 ENV APP_HOME /go
 ENV APP_NAME basic-go-api
-RUN groupadd $APP_USER && useradd -m -g $APP_USER -l $APP_USER
-RUN mkdir -p $APP_HOME
-WORKDIR $APP_HOME
-COPY --chown=0:0 --from=builder $APP_HOME/$APP_NAME $APP_HOME
+COPY --from=builder $APP_HOME/$APP_NAME .
 EXPOSE 3000
-USER $APP_USER
-# CMD ["./"$APP_NAME]
 CMD ["./basic-go-api"]
 
 # first browse to the proejct directory then run these
