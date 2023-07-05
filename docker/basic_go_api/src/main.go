@@ -10,7 +10,7 @@ func main() {
 	fmt.Println("App Starting...")
 
 	http.HandleFunc("/", handler)
-	log.Fatal(http.ListenAndServe(":3002", nil))
+	log.Fatal(http.ListenAndServe(":3000", nil))
 }
 
 func handler(w http.ResponseWriter, r *http.Request) {
