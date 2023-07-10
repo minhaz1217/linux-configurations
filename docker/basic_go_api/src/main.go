@@ -13,6 +13,7 @@ import (
 
 var hitCount int = 0
 var badRequestHitCount int = 0
+var delayId int = 0
 
 func main() {
 	fmt.Println("App Starting...")
@@ -115,6 +116,7 @@ func resetBadRequestCountEndPoint(w http.ResponseWriter, r *http.Request) {
 }
 
 func delayEndPoint(w http.ResponseWriter, r *http.Request) {
+
 	delayString := strings.TrimPrefix(r.URL.Path, "/delay/")
 	delay, err := strconv.Atoi(delayString)
 	output := fmt.Sprintf("%s", delayString)
@@ -124,9 +126,10 @@ func delayEndPoint(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, fmt.Sprintf("%s\n", "ERROR"))
 		return
 	}
+	delayId += 1
 	hostName := getHostName()
-	fmt.Println("Starting delay:", delay, hostName)
+	fmt.Println("Starting delay:", delay, "Host:", hostName, "DelayID:", delayId)
 	time.Sleep(time.Duration(delay) * time.Millisecond)
-	fmt.Println("Stopping delay:", delay, hostName)
-	fmt.Fprintf(w, fmt.Sprintf("Delay Finished: %s\n", output))
+	fmt.Println("Stopping delay:", delay, "Host:", hostName, "DelayID:", delayId)
+	fmt.Fprintf(w, fmt.Sprintf("Finished delay: %d Host: %s DelayID: %d", delay, hostName, delayId))
 }
