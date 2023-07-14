@@ -132,5 +132,5 @@ func delayEndPoint(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("Starting delay:", delay, "Host:", hostName, "DelayID:", delayId)
 	time.Sleep(time.Duration(delay) * time.Millisecond)
 	fmt.Println("Stopping delay:", delay, "Host:", hostName, "DelayID:", delayId)
-	fmt.Fprintf(w, fmt.Sprintf("%sFinished delay: %d Host: %s DelayID: %d", version, delay, hostName, delayId))
+	fmt.Fprintf(w, fmt.Sprintf("%sFinished delay: %d Host: %s DelayID: %d\n", version, delay, hostName, delayId))
 }
