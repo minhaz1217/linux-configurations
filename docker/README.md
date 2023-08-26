@@ -438,9 +438,9 @@ sudo docker run --name trilium -it -p8080:8080 -v $DOCKER_VOLUMES_ROOT/trilium:/
 
 # Seq
 ```
-PH=$(echo 'seqPassWord321%%' | docker run --rm -i datalust/seq config hash)
+PH=$(echo 'minhazseq123456%%' | docker run --rm -i datalust/seq config hash)
 
-docker run --name seq -d --restart unless-stopped -e ACCEPT_EULA=Y -e SEQ_FIRSTRUN_ADMINPASSWORDHASH="$PH" -v $DOCKER_VOLUMES_ROOT/seq/data:/data -p 5341:5341 datalust/seq
+docker run --name seq -d --network minhazul-net --restart unless-stopped -e ACCEPT_EULA=Y -e SEQ_FIRSTRUN_ADMINPASSWORDHASH="$PH" -v $DOCKER_VOLUMES_ROOT/seq/data:/data datalust/seq
 
 docker run --name seq -d --restart unless-stopped -e ACCEPT_EULA=Y -e SEQ_FIRSTRUN_ADMINPASSWORDHASH="QOl8fDOsBiz82GXF5E87qCrWaogV9dnQIcqdIXCNIEJaf6aFBPZ3DXevxTCWuFRXV7h3yAd2UP2VdzVphbGvpqWDKsus5v2x4eyVWOhT04qc" -v $DOCKER_VOLUMES_ROOT/seq/data:/data -p 5341:5341 datalust/seq
 ```
@@ -467,4 +467,13 @@ docker run -d --name sonarqube \
 # Uptime kuma
 ```
 docker run -d --network minhazul-net --name uptime --restart=always -p 3001:3001 -v $DOCKER_VOLUMES_ROOT/uptime-kuma:/app/data louislam/uptime-kuma:1
+```
+
+
+# Allure
+```
+docker run -dit --network minhazul-net --name allure-service -p 5050:5050 -e CHECK_RESULTS_EVERY_SECONDS=3 -e KEEP_HISTORY=1 -v $DOCKER_VOLUMES_ROOT/allure/allure-results:/app/allure-results -v $DOCKER_VOLUMES_ROOT/allure/allure-reports:/app/default-reports frankescobar/allure-docker-service
+
+
+docker run -dit --network minhazul-net --name allure-ui -p 5252:5252 -e ALLURE_DOCKER_PUBLIC_API_URL=http://localhost:5050 frankescobar/allure-docker-service-ui
 ```
