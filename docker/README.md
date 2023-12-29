@@ -12,6 +12,13 @@
 
 `echo $DOCKER_VOLUMES_ROOT`
 
+# Creating alias
+```
+alias docker="podman"
+```
+
+-p <host_port>:<container_port>
+
 # Busybox
 `docker run -it --rm busybox`
 
@@ -127,11 +134,14 @@ mongodb://mongoadmin:minhaz@172.17.0.3:27017/grandnode2?authSource=admin&readPre
 
 # Nginx
 ## First copy the nginx config file from a temp container
-`mkdir %DOCKER_VOLUMES_ROOT%/nginx/nginx/`
+`mkdir -p %DOCKER_VOLUMES_ROOT%/nginx/nginx/`
+
+sudo podman run --name nginx -v $DOCKER_VOLUMES_ROOT/nginx/nginx:/etc/nginx -v $DOCKER_VOLUMES_ROOT/nginx/cert:/etc/ssl/private -p 80:80 -p 443:443 --network minhazul-net -d nginx
+
 ```
 docker run --name tmp-nginx-container -d nginx
 docker cp tmp-nginx-container:/etc/nginx/ %DOCKER_VOLUMES_ROOT%/nginx/
-docker cp tmp-nginx-container:/etc/nginx/nginx.conf %DOCKER_VOLUMES_ROOT%/nginx/nginx
+docker cp tmp-nginx-container:/etc/nginx/nginx.conf %DOCKER_VOLUMES_ROOT%/nginx
 docker rm -f tmp-nginx-container
 ```
 ## Run the nginx
@@ -312,6 +322,8 @@ scrape_configs:
 # Jenkins
 `docker run --name jenkins -p 8081:8080 -p 50000:50000 -dit -v %DOCKER_VOLUMES_ROOT%/jenkins/data:/var/jenkins_home jenkins/jenkins:lts-jdk11`
 
+docker run --name jenkins -p 8081:8080 -p 50000:50000 -dit jenkins/jenkins:lts-jdk11
+
 ### Run this to see the secret key for admin access at `localhost:8080`
 `docker exec jenkins cat /var/jenkins_home/secrets/initialAdminPassword`
 
@@ -347,6 +359,15 @@ openssl req -new -x509 -text -key client.key -out client.cert -->
 ## Retrive the generated file
 `sudo docker run -v $DOCKER_VOLUMES_ROOT/openvpn:/etc/openvpn --rm kylemanna/openvpn ovpn_getclient $vpn_username > $vpn_username.ovpn`
 
+### See the file
+```
+cat $vpn_username.ovpn
+```
+
+### If any problem with permission
+```
+podman run --name openvpn -v $DOCKER_VOLUMES_ROOT/openvpn:/etc/openvpn -dit -p 1049:1194/udp --privileged kylemanna/openvpn
+```
 # Zookeeper
 ### Install using
 `docker run --name zookeeper --restart always -dit -p 4001:2181 -p 4002:2888 -p 4003:3888 -p 4004:8080 -v $DOCKER_VOLUMES_ROOT/zookeeper/conf:/conf -v $DOCKER_VOLUMES_ROOT/zookeeper/data:/data -v $DOCKER_VOLUMES_ROOT/zookeeper/datalog:/datalog zookeeper`
@@ -476,4 +497,10 @@ docker run -dit --network minhazul-net --name allure-service -p 5050:5050 -e CHE
 
 
 docker run -dit --network minhazul-net --name allure-ui -p 5252:5252 -e ALLURE_DOCKER_PUBLIC_API_URL=http://localhost:5050 frankescobar/allure-docker-service-ui
+```
+
+
+# Abstruse CI/CD
+```
+docker run -dit --restart always -v $DOCKER_VOLUMES_ROOT/abstruse/abstruse-config:/root/abstruse -p 6500:6500 bleenco/abstruse
 ```
