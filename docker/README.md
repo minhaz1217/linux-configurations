@@ -19,6 +19,15 @@ alias docker="podman"
 
 -p <host_port>:<container_port>
 
+# Powershell variable
+Set-Variable sharedFolder "D:/fluent-bit"
+
+# System cleanup
+```
+docker builder prune
+docker image prune
+```
+
 # Busybox
 `docker run -it --rm busybox`
 
@@ -466,10 +475,6 @@ docker run --name seq -d --network minhazul-net --restart unless-stopped -e ACCE
 docker run --name seq -d --restart unless-stopped -e ACCEPT_EULA=Y -e SEQ_FIRSTRUN_ADMINPASSWORDHASH="QOl8fDOsBiz82GXF5E87qCrWaogV9dnQIcqdIXCNIEJaf6aFBPZ3DXevxTCWuFRXV7h3yAd2UP2VdzVphbGvpqWDKsus5v2x4eyVWOhT04qc" -v $DOCKER_VOLUMES_ROOT/seq/data:/data -p 5341:5341 datalust/seq
 ```
 
-http://localhost:5341/#/dashboards?dashboardId=dashboard-14&range=2h&group=1m&
-refresh=10s&apiKey=QOl8fDOsBiz82GXF5E87qCrWaogV9dnQIcqdIXCNIEJaf6aFBPZ3DXevxTCWuFRXV7h3yAd2UP2VdzVphbGvpqWDKsus5v2x4eyVWOhT04qc&theme=dark-theme&maximized
-
-
 # SonarQube
 ```
 docker run -d --name sonarqube -e SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true -p 9000:9000 -v $DOCKER_VOLUMES_ROOT/sonarqube/data:/opt/sonarqube/data -v $DOCKER_VOLUMES_ROOT/sonarqube/extensions:/opt/sonarqube/extensions -v $DOCKER_VOLUMES_ROOT/sonarqube/logs:/opt/sonarqube/logs sonarqube:latest
@@ -504,3 +509,15 @@ docker run -dit --network minhazul-net --name allure-ui -p 5252:5252 -e ALLURE_D
 ```
 docker run -dit --restart always -v $DOCKER_VOLUMES_ROOT/abstruse/abstruse-config:/root/abstruse -p 6500:6500 bleenco/abstruse
 ```
+
+# Fluent bit
+### Copying the configuration file
+```
+docker run -d --rm --name temp cr.fluentbit.io/fluent/fluent-bit
+docker cp temp:/fluent-bit/etc/ $DOCKER_VOLUMES_ROOT/fluent-bit
+docker stop temp
+```
+```
+docker run -dti --name fb -p 2020:2020 -v $DOCKER_VOLUMES_ROOT/fluent-bit/etc:/fluent-bit/etc --network minhazul-net cr.fluentbit.io/fluent/fluent-bit
+```
+docker run -dti --name fb2 --network minhazul-net cr.fluentbit.io/fluent/fluent-bit
