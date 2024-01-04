@@ -521,3 +521,19 @@ docker stop temp
 docker run -dti --name fb -p 2020:2020 -v $DOCKER_VOLUMES_ROOT/fluent-bit/etc:/fluent-bit/etc --network minhazul-net cr.fluentbit.io/fluent/fluent-bit
 ```
 docker run -dti --name fb2 --network minhazul-net cr.fluentbit.io/fluent/fluent-bit
+
+
+
+# Squidfunk
+```
+docker run --rm -it -v $DOCKER_VOLUMES_ROOT/sqidfunk/docs:/docs squidfunk/mkdocs-material new .
+```
+
+## Previewing
+```
+docker run --rm -it -p 8000:8000 -v $DOCKER_VOLUMES_ROOT/sqidfunk/docs:/docs squidfunk/mkdocs-material
+```
+## Building`
+```
+docker run --rm -it -v $DOCKER_VOLUMES_ROOT/sqidfunk/docs:/docs squidfunk/mkdocs-material build
+```
