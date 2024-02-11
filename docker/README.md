@@ -537,3 +537,13 @@ docker run --rm -it -p 8000:8000 -v $DOCKER_VOLUMES_ROOT/sqidfunk/docs:/docs squ
 ```
 docker run --rm -it -v $DOCKER_VOLUMES_ROOT/sqidfunk/docs:/docs squidfunk/mkdocs-material build
 ```
+
+# Pocketbase
+```
+docker run -dit --name pocketbase -v $DOCKER_VOLUMES_ROOT/pocketbase/data:/pb_data -p 8090:8090 ghcr.io/muchobien/pocketbase:latest
+```
+
+# Buildkit
+```
+docker run -e BUILDKITE_AGENT_TOKEN="9e92a24163ff534e1b4c0856a18a63caec850bb007730ff150" buildkite/agent
+```
