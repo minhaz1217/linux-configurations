@@ -220,12 +220,8 @@ docker run --name nproxy --net-alias nginx_proxymanager -v $HOME/nginx_proxymana
 
 # Prometheus
 
-`docker run -d -it --network minhazul-net --name=prometheus -v $DOCKER_VOLUMES_ROOT/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml prom/prometheus`
+`docker run -d -it -p 9090:9090 --network minhazul-net --name=prometheus -v $DOCKER_VOLUMES_ROOT/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml -v $DOCKER_VOLUMES_ROOT/prometheus/data:/prometheus/ prom/prometheus`
 
-`docker run -p 9090:9090 -v %DOCKER_VOLUMES_ROOT%/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml prom/prometheus`
-
-
-`docker run -d -it --network minhazul-net --name=prometheus -p 9090:9090 -v %DOCKER_VOLUMES_ROOT%/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml -v %DOCKER_VOLUMES_ROOT%/prometheus/data:/prometheus/ prom/prometheus`
 
 ## Prometheus - Node exporter
 `docker run -d -it --network minhazul-net --name=node-exporter -v "/:/host:ro,rslave" quay.io/prometheus/node-exporter:latest --path.rootfs=/host`
@@ -234,12 +230,10 @@ docker run --name nproxy --net-alias nginx_proxymanager -v $HOME/nginx_proxymana
 `sudo docker run --network minhazul-net --name=cadvisor --volume=/:/rootfs:ro --volume=/var/run:/var/run:ro --volume=/sys:/sys:ro --volume=/var/lib/docker/:/var/lib/docker:ro --volume=/dev/disk/:/dev/disk:ro --detach=true  --privileged --device=/dev/kmsg gcr.io/cadvisor/cadvisor`
 
 # Grafana
-`echo $UID`
 
-`sudo docker run -d  --name grafana --network minhazul-net -e "GF_INSTALL_PLUGINS=grafana-clock-panel,grafana-simple-json-datasource"  grafana/grafana-oss`
+`docker run -dit -p 9091:3000 --network minhazul-net --name grafana -v $DOCKER_VOLUMES_ROOT/grafana:/var/lib/grafana -e "GF_INSTALL_PLUGINS=grafana-clock-panel,grafana-simple-json-datasource"  grafana/grafana-enterprise`
 
-
-`docker run -d -it --network minhazul-net --name grafana -v $DOCKER_VOLUMES_ROOT/grafana:/var/lib/grafana -e "GF_INSTALL_PLUGINS=grafana-clock-panel,grafana-simple-json-datasource"  grafana/grafana-enterprise`
+To Use OpenSource Version >> grafana/grafana-oss
 
 
 `docker run -d -it --network minhazul-net --name node-exporter -v "%DOCKER_VOLUMES_ROOT%/prometheus/node-exporter/:/host:ro,rslave" quay.io/prometheus/node-exporter:latest --path.rootfs=/host`
@@ -472,7 +466,7 @@ PH=$(echo 'minhazseq123456%%' | docker run --rm -i datalust/seq config hash)
 
 docker run --name seq -d --network minhazul-net --restart unless-stopped -e ACCEPT_EULA=Y -e SEQ_FIRSTRUN_ADMINPASSWORDHASH="$PH" -v $DOCKER_VOLUMES_ROOT/seq/data:/data datalust/seq
 
-docker run --name seq -d --restart unless-stopped -e ACCEPT_EULA=Y -e SEQ_FIRSTRUN_ADMINPASSWORDHASH="QOl8fDOsBiz82GXF5E87qCrWaogV9dnQIcqdIXCNIEJaf6aFBPZ3DXevxTCWuFRXV7h3yAd2UP2VdzVphbGvpqWDKsus5v2x4eyVWOhT04qc" -v $DOCKER_VOLUMES_ROOT/seq/data:/data -p 5341:5341 datalust/seq
+docker run --name seq -d --restart unless-stopped -e ACCEPT_EULA=Y -e SEQ_FIRSTRUN_ADMINPASSWORDHASH="QOl8fDOsBiz82GXF5E87qCrWaogV9dnQIcqdIXCNIEJaf6aFBPZ3DXevxTCWuFRXV7h3yAd2UP2VdzVphbGvpqWDKsus5v2x4eyVWOhT04qc" -v $DOCKER_VOLUMES_ROOT/seq/data:/data -p 3003:80 -p 5341:5341 datalust/seq
 ```
 
 # SonarQube
