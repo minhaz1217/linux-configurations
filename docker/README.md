@@ -53,6 +53,28 @@ docker image prune
 # Mongo compass
 `docker run -d --name mongo-express --network minhazul-net -e ME_CONFIG_OPTIONS_EDITORTHEME="ambiance" -e ME_CONFIG_MONGODB_SERVER="mongo" -e ME_CONFIG_MONGODB_ADMINUSERNAME="mongoadmin" -e ME_CONFIG_MONGODB_ADMINPASSWORD="minhaz" -e ME_CONFIG_BASICAUTH_USERNAME="mongominhaz" -e ME_CONFIG_BASICAUTH_PASSWORD="minhaz123" mongo-express`
 
+# MongoDB with Replica
+`docker run -d -p 27117:27017 --name mongo-rs --network minhazul-net mongo mongod --replSet mongo-replica-set`
+
+`?replicaSet=mongo-replica-set`
+
+Go inside the container and Initiate the replica
+```
+mongosh --eval "rs.initiate({
+ _id: \"mongo-replica-set\",
+ members: [
+   {_id: 0, host: \"mongo1\"}
+ ]
+})"
+```
+Check status
+```
+mongosh --eval "rs.status()"
+```
+
+docker run -p 27117:27017 -d mongodb/mongodb-community-server:latest --name mongodb --replSet myReplicaSet
+
+
 # General docker commands
 ## See logs:
 `docker exec -it some-mongo bash` \
