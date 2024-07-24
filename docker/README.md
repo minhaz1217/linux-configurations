@@ -378,7 +378,7 @@ openssl req -new -x509 -text -key client.key -out client.cert -->
 `sudo docker run --name openvpn -v $DOCKER_VOLUMES_ROOT/openvpn:/etc/openvpn -dit -p 1194:1194/udp --cap-add=NET_ADMIN kylemanna/openvpn`
 
 ## Generate client config
-`export vpn_username=minhaz-mobile`
+`export vpn_username=minhaz-pc`
 `sudo docker run -v $DOCKER_VOLUMES_ROOT/openvpn:/etc/openvpn --rm -it kylemanna/openvpn easyrsa build-client-full $vpn_username nopass`
 
 ## Retrive the generated file
@@ -389,10 +389,18 @@ openssl req -new -x509 -text -key client.key -out client.cert -->
 cat $vpn_username.ovpn
 ```
 
-### If any problem with permission
+### Common issues
+
+#### If any problem with permission
 ```
 podman run --name openvpn -v $DOCKER_VOLUMES_ROOT/openvpn:/etc/openvpn -dit -p 1049:1194/udp --privileged kylemanna/openvpn
 ```
+
+#### To run with the ipv6 configs
+```
+sudo podman run --name openvpn -v $DOCKER_VOLUMES_ROOT/openvpn:/etc/openvpn -dit -p 1194:1194/udp --privileged --sysctl net.ipv6.conf.all.disable_ipv6=0 --sysctl net.ipv6.conf.default.forwarding=1 --sysctl net.ipv6.conf.all.forwarding=1 kylemanna/openvpn
+```
+
 # Zookeeper
 ### Install using
 `docker run --name zookeeper --restart always -dit -p 4001:2181 -p 4002:2888 -p 4003:3888 -p 4004:8080 -v $DOCKER_VOLUMES_ROOT/zookeeper/conf:/conf -v $DOCKER_VOLUMES_ROOT/zookeeper/data:/data -v $DOCKER_VOLUMES_ROOT/zookeeper/datalog:/datalog zookeeper`
