@@ -253,12 +253,14 @@ docker run --name nproxy --net-alias nginx_proxymanager -v $HOME/nginx_proxymana
 
 # Grafana
 
-`docker run -dit -p 9091:3000 --network minhazul-net --name grafana -v $DOCKER_VOLUMES_ROOT/grafana:/var/lib/grafana -e "GF_INSTALL_PLUGINS=grafana-clock-panel,grafana-simple-json-datasource"  grafana/grafana-enterprise`
+`docker run -dit -p 9091:3000 --network minhazul-net --name grafana -v $DOCKER_VOLUMES_ROOT/grafana:/var/lib/grafana -e "GF_INSTALL_PLUGINS=grafana-clock-panel,grafana-simple-json-datasource"  grafana/grafana:latest`
 
 To Use OpenSource Version >> grafana/grafana-oss
 
 
 `docker run -d -it --network minhazul-net --name node-exporter -v "%DOCKER_VOLUMES_ROOT%/prometheus/node-exporter/:/host:ro,rslave" quay.io/prometheus/node-exporter:latest --path.rootfs=/host`
+
+Cadvisor >> 
 
 `sudo docker run -d -it --network minhazul-net --name=cadvisor --volume=%DOCKER_VOLUMES_ROOT%/prometheus/cadvisor/:/rootfs:ro --volume=%DOCKER_VOLUMES_ROOT%/prometheus/cadvisor/var/run:/var/run:ro --volume=%DOCKER_VOLUMES_ROOT%/prometheus/cadvisor/sys:/sys:ro --volume=%DOCKER_VOLUMES_ROOT%/prometheus/cadvisor/var/lib/docker/:/var/lib/docker:ro --volume=%DOCKER_VOLUMES_ROOT%/prometheus/cadvisor/dev/disk/:/dev/disk:ro --publish=8080:8080 --detach=true --name=cadvisor --privileged gcr.io/cadvisor/cadvisor`
 
