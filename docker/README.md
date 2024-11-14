@@ -502,9 +502,45 @@ docker run --name seq -d --restart unless-stopped -e ACCEPT_EULA=Y -e SEQ_FIRSTR
 ```
 
 # SonarQube
+
 ```
-docker run -d --name sonarqube -e SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true -p 9000:9000 -v $DOCKER_VOLUMES_ROOT/sonarqube/data:/opt/sonarqube/data -v $DOCKER_VOLUMES_ROOT/sonarqube/extensions:/opt/sonarqube/extensions -v $DOCKER_VOLUMES_ROOT/sonarqube/logs:/opt/sonarqube/logs sonarqube:latest
+docker run -d --name sonarqube -e SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true -p 9000:9000 -v $DOCKER_VOLUMES_ROOT/sonarqube/data:/opt/sonarqube/data -v $DOCKER_VOLUMES_ROOT/sonarqube/extensions:/opt/sonarqube/extensions -v $DOCKER_VOLUMES_ROOT/sonarqube/logs:/opt/sonarqube/logs sonarqube:lts-community
+
+docker run -d --name sonarqube -e SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true -p 9000:9000 sonarqube:lts-community
+
+docker run -d --name sonarqube -e SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true -p 9000:9000 sonarqube:latest
+
 ```
+user pass - admin/admin
+
+worked for 
+```java
+mvn clean verify sonar:sonar -Dsonar.projectKey=service-provider -Dsonar.projectName='service-provider' -Dsonar.token=sqp_0f4ac489a6f39076d8e9a3d208d86af9a26b30a0
+```
+```.net
+dotnet sonarscanner begin /k:"Selise.Ecap.PCX.WebService" /d:sonar.host.url="http://localhost:9000"  /d:sonar.token="sqp_e20f9a4966185105354b347c447df741d43faea5"
+dotnet build
+dotnet sonarscanner end /d:sonar.token="sqp_e20f9a4966185105354b347c447df741d43faea5"
+```
+.net with code coverage
+```
+set TOKEN sqp_e20f9a4966185105354b347c447df741d43faea5
+
+cd ./src
+
+dotnet sonarscanner begin /k:"Selise.Ecap.PCX.WebService" /d:sonar.host.url="http://localhost:9000"  /d:sonar.token="$TOKEN" /d:sonar.cs.opencover.reportsPaths=coverage.xml
+
+dotnet restore "./Selise.Ecap.PCX.WebService.sln"
+dotnet build "./Selise.Ecap.PCX.WebService.sln"
+coverlet ./UnitTest.Test/bin/Debug/net6.0/UnitTest.Test.dll --target "dotnet" --targetargs "test Selise.Ecap.PCX.WebService.sln --no-build" -f=opencover -o="coverage.xml"
+
+dotnet sonarscanner end /d:sonar.token="$TOKEN"
+```
+
+```angular
+sonar-scanner.bat -D"sonar.projectKey=l3-angular-ipex-business" -D"sonar.sources=." -D"sonar.host.url=http://localhost:9000" -D"sonar.token=sqp_bc4481ebca94d8a6e1bdec467e7e010fdcba9ea8"
+```
+
 ```
 docker run -d --name sonarqube \
     -p 9000:9000 \
