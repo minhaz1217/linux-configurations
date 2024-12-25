@@ -33,6 +33,19 @@ docker builder prune
 docker image prune
 ```
 
+# Some docker common params
+
+```
+--restart unless-stopped
+--name container-name
+-p 127.0.0.1:HOST_PORT:CONTAINER_PORT
+--network minhazul-net
+--memory=30m
+--rm
+-dit
+
+```
+
 # Busybox
 
 `docker run -it --rm busybox`
@@ -567,7 +580,7 @@ PH=$(echo 'minhazseq123456%%' | docker run --rm -i datalust/seq config hash)
 
 docker run --name seq -d --network minhazul-net --restart unless-stopped -e ACCEPT_EULA=Y -e SEQ_FIRSTRUN_ADMINPASSWORDHASH="$PH" -v $DOCKER_VOLUMES_ROOT/seq/data:/data datalust/seq
 
-docker run --name seq -d --restart unless-stopped -e ACCEPT_EULA=Y -e SEQ_FIRSTRUN_ADMINPASSWORDHASH="QOl8fDOsBiz82GXF5E87qCrWaogV9dnQIcqdIXCNIEJaf6aFBPZ3DXevxTCWuFRXV7h3yAd2UP2VdzVphbGvpqWDKsus5v2x4eyVWOhT04qc" -v $DOCKER_VOLUMES_ROOT/seq/data:/data -p 3003:80 -p 5341:5341 datalust/seq
+docker run --name seq -dit --network minhazul-net --restart unless-stopped -e ACCEPT_EULA=Y -e SEQ_FIRSTRUN_ADMINPASSWORDHASH="QOl8fDOsBiz82GXF5E87qCrWaogV9dnQIcqdIXCNIEJaf6aFBPZ3DXevxTCWuFRXV7h3yAd2UP2VdzVphbGvpqWDKsus5v2x4eyVWOhT04qc" -v $DOCKER_VOLUMES_ROOT/seq/data:/data -p 12201:12201 -p 3003:80 -p 5341:5341 datalust/seq
 ```
 
 # SonarQube
