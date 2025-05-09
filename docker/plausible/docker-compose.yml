@@ -9,6 +9,8 @@ services:
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       start_period: 1m
+    networks:
+      - minhazul-net
 
   plausible_events_db:
     image: clickhouse/clickhouse-server:24.3.3.102-alpine
@@ -34,8 +36,11 @@ services:
           "wget --no-verbose --tries=1 -O - http://127.0.0.1:8123/ping || exit 1",
         ]
       start_period: 1m
+    networks:
+      - minhazul-net
 
   plausible:
+    container_name: plausible
     image: ghcr.io/plausible/community-edition:v2.1.4
     restart: always
     command: sh -c "/entrypoint.sh db createdb && /entrypoint.sh db migrate && /entrypoint.sh run"
@@ -50,6 +55,8 @@ services:
       nofile:
         soft: 65535
         hard: 65535
+    networks:
+      - minhazul-net
     environment:
       - TMPDIR=/var/lib/plausible/tmp
       # required: https://github.com/plausible/community-edition/wiki/configuration#required
@@ -88,15 +95,13 @@ services:
       - MAILGUN_BASE_URI
       - MANDRILL_API_KEY
       - SENDGRID_API_KEY
-  nginx-proxy-manager:
-    image: jc21/nginx-proxy-manager:latest
-    ports:
-      - 81:81
-      - 80:80
-      - 443:443
 
 volumes:
   db-data:
   event-data:
   event-logs:
   plausible-data:
+
+networks:
+  minhazul-net:
+    external: true
