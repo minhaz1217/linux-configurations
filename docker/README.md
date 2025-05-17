@@ -747,3 +747,26 @@ docker run -dit --name jaeger2 --network minhazul-net -e COLLECTOR_ZIPKIN_HOST_P
 ```
 
 GOTO: http://localhost:16686
+
+# Ollama
+
+```
+docker run --name ollama -dit --gpus=all -v $DOCKER_VOLUMES_ROOT/ollama:/root/.ollama:z -p 11434:11434 ollama/ollama
+
+docker exec -it ollama ollama pull llama3
+
+docker exec -it ollama ollama list
+docker exec -it ollama ollama run llama3
+
+curl http://localhost:11434/api/generate -d '{
+"model": "llama3",
+"prompt": "Why is the sky blue?",
+"stream": true,
+"options": {
+"seed": 123,
+"top_k": 20,
+"top_p": 0.9,
+"temperature": 0
+}
+}'
+```
