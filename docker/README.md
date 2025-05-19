@@ -777,3 +777,10 @@ curl http://localhost:11434/api/generate -d '{
 ```
 docker run --name qdrant -dit -p 6333:6333 -p 6334:6334 -v $DOCKER_VOLUMES_ROOT/qdrant_storage:/qdrant/storage:z qdrant/qdrant
 ```
+
+
+# argilla
+
+```
+docker run -d --name quickstart -p 6900:6900 argilla/argilla-quickstart:latest
+```
