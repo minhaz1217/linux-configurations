@@ -758,6 +758,10 @@ docker exec -it ollama ollama pull llama3
 docker exec -it ollama ollama list
 docker exec -it ollama ollama run llama3
 
+docker exec -it ollama ollama pull qwen2.5:0.5b
+docker exec -it ollama ollama run qwen2.5:0.5b
+
+
 curl http://localhost:11434/api/generate -d '{
 "model": "llama3",
 "prompt": "Why is the sky blue?",
