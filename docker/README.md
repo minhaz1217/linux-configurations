@@ -775,6 +775,19 @@ curl http://localhost:11434/api/generate -d '{
 }'
 ```
 
+### Enabling GPU support in ollama
+```
+Get the UUID: nvidia-smi -L
+nano /etc/systemd/system/ollama.service
+
+CUDA_VISIBLE_DEVICES=GPU-e6819fdd-d3f9-1946-2c8f-415536bb5cfb
+
+sudo systemctl daemon-reload
+sudo systemctl restart ollama
+
+nvidia-smi
+```
+
 
 # Qdrant
 
