@@ -46,6 +46,14 @@ docker image prune
 
 ```
 
+### Primary things that needs to be installed
+```
+postgres
+mongo
+nproxy
+ollama
+```
+
 # Busybox
 
 `docker run -it --rm busybox`
@@ -60,7 +68,7 @@ docker image prune
 
 `docker run --name postgres --network minhazul-net -p 5432:5432 -v $DOCKER_VOLUMES_ROOT/postgres:/var/lib/postgresql/data -e POSTGRES_USER=minhaz -e POSTGRES_PASSWORD=minhaz -e PGDATA=/var/lib/postgresql/data/pgdata -d postgres:latest`
 
-`sudo docker run -dit --name postgres --network minhazul-net -p 5432:5432 --restart always -v $DOCKER_VOLUMES_ROOT/postgres:/var/lib/postgresql/data -e POSTGRES_USER=minhaz -e POSTGRES_PASSWORD=minhaz -e PGDATA=/var/lib/postgresql/data/pgdata postgres:14.6`
+`sudo docker run -dit --name postgres --network minhazul-net -p 5432:5432 -v $DOCKER_VOLUMES_ROOT/postgres:/var/lib/postgresql/data -e POSTGRES_USER=minhaz -e POSTGRES_PASSWORD=minhaz -e PGDATA=/var/lib/postgresql/data/pgdata postgres:14.6`
 
 # PgAdmin
 
@@ -69,6 +77,8 @@ docker image prune
 # MongoDB
 
 `docker run --name mongo -p 27017:27017 -v $DOCKER_VOLUMES_ROOT/mongodb:/data/db -e MONGO_INITDB_ROOT_USERNAME=mongoadmin -e MONGO_INITDB_ROOT_PASSWORD=minhaz --network minhazul-net -d mongo`
+
+`docker run --name mongo -p 27017:27017 -v $DOCKER_VOLUMES_ROOT/mongodb:/data/db -e MONGO_INITDB_ROOT_USERNAME=mongoadmin -e MONGO_INITDB_ROOT_PASSWORD=minhaz --network minhazul-net -d mongo:7`
 
 # Mongo compass
 
@@ -751,7 +761,7 @@ GOTO: http://localhost:16686
 # Ollama
 
 ```
-docker run --name ollama -dit --gpus=all -v $DOCKER_VOLUMES_ROOT/ollama:/root/.ollama:z -p 11434:11434 ollama/ollama
+docker run --name ollama --network minhazul-net -dit --gpus=all -v $DOCKER_VOLUMES_ROOT/ollama:/root/.ollama:z -p 11434:11434 ollama/ollama
 
 docker exec -it ollama ollama pull llama3
 
@@ -759,6 +769,8 @@ docker exec -it ollama ollama list
 docker exec -it ollama ollama run llama3
 
 docker exec -it ollama ollama pull qwen2.5:0.5b
+docker exec -it ollama ollama pull legraphista/Orpheus:latest
+docker exec -it ollama ollama pull sematre/orpheus:en
 docker exec -it ollama ollama run qwen2.5:0.5b
 
 
@@ -787,8 +799,6 @@ sudo systemctl restart ollama
 
 nvidia-smi
 ```
-
-
 # Qdrant
 
 ```
