@@ -811,3 +811,10 @@ docker run --name qdrant -dit -p 6333:6333 -p 6334:6334 -v $DOCKER_VOLUMES_ROOT/
 ```
 docker run -d --name quickstart -p 6900:6900 argilla/argilla-quickstart:latest
 ```
+
+# Open web ui
+```
+docker run -d -p 3000:8080 --network minhazul-net -e OLLAMA_BASE_URL=http://ollama:11434 -v $DOCKER_VOLUMES_ROOT/open-webui:/app/backend/data --name open-webui ghcr.io/open-webui/open-webui:main-slim
+
+docker run -d -p 3000:8080 --network minhazul-net -e OLLAMA_BASE_URL=http://ollama:11434 -e HF_HUB_OFFLINE=1 -v $DOCKER_VOLUMES_ROOT/open-webui:/app/backend/data --name open-webui ghcr.io/open-webui/open-webui:main-slim
+```
