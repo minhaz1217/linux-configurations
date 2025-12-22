@@ -818,3 +818,8 @@ docker run -d -p 3000:8080 --network minhazul-net -e OLLAMA_BASE_URL=http://olla
 
 docker run -d -p 3000:8080 --network minhazul-net -e OLLAMA_BASE_URL=http://ollama:11434 -e HF_HUB_OFFLINE=1 -v $DOCKER_VOLUMES_ROOT/open-webui:/app/backend/data --name open-webui ghcr.io/open-webui/open-webui:main-slim
 ```
+
+# langflow
+```
+docker run -p 7860:7860 langflowai/langflow:latest
+```
