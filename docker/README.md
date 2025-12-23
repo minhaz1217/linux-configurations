@@ -823,3 +823,14 @@ docker run -d -p 3000:8080 --network minhazul-net -e OLLAMA_BASE_URL=http://olla
 ```
 docker run -p 7860:7860 langflowai/langflow:latest
 ```
+
+# n8n
+```
+set N8N_DIAGNOSTICS_ENABLED false
+set N8N_VERSION_NOTIFICATIONS_ENABLED false
+
+
+docker volume create n8n_data
+
+docker run -dit --name n8n -p 5678:5678 -v $DOCKER_VOLUMES_ROOT/n8n_data:/home/node/.n8n docker.n8n.io/n8nio/n8n
+```
