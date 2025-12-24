@@ -834,3 +834,26 @@ docker volume create n8n_data
 
 docker run -dit --name n8n -p 5678:5678 -v $DOCKER_VOLUMES_ROOT/n8n_data:/home/node/.n8n docker.n8n.io/n8nio/n8n
 ```
+### with postgres
+
+-e POSTGRES_USER=minhaz
+-e POSTGRES_PASSWORD=minhaz
+-e POSTGRES_DB=
+-e POSTGRES_NON_ROOT_USER=
+-e POSTGRES_NON_ROOT_PASSWORD=
+
+for web hook 
+
+WEBHOOK_URL=https://url/ 
+```
+psql --username minhaz --dbname postgres
+psql --username n8nUser --dbname postgres
+
+
+docker exec -it postgres bash -c "psql -U minhaz --dbname postgres"
+CREATE ROLE "n8nUser" NOINHERIT LOGIN ENCRYPTED PASSWORD 'n8nPass';
+CREATE DATABASE "n8n";
+GRANT ALL PRIVILEGES ON DATABASE "n8n" TO "n8nUser";
+\c n8n
+GRANT ALL ON SCHEMA public TO "n8nUser";
+
