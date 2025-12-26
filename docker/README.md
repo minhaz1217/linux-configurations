@@ -868,3 +868,9 @@ GRANT CREATE ON SCHEMA public TO n8nUser;
 docker run -dit --name n8n_pg --network minhazul-net -p 5678:5678 -v $DOCKER_VOLUMES_ROOT/n8n_data_postgres:/home/node/.n8n -e DB_TYPE=postgresdb -e DB_POSTGRESDB_HOST=postgres -e DB_POSTGRESDB_PORT=5432 -e DB_POSTGRESDB_DATABASE=n8n -e DB_POSTGRESDB_USER=n8nUser -e DB_POSTGRESDB_PASSWORD='n8nPass' docker.n8n.io/n8nio/n8n
 ```
 
+
+# label-studio
+
+```
+docker run --name label-studio -dit -p 8080:8080 -v $DOCKER_VOLUMES_ROOT/label-studio:/label-studio/data heartexlabs/label-studio:latest
+```
