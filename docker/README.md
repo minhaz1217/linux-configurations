@@ -874,3 +874,25 @@ docker run -dit --name n8n_pg --network minhazul-net -p 5678:5678 -v $DOCKER_VOL
 ```
 docker run --name label-studio -dit -p 8080:8080 -v $DOCKER_VOLUMES_ROOT/label-studio:/label-studio/data heartexlabs/label-studio:latest
 ```
+
+# supabase
+
+Clone the supabase repo
+
+```
+# Get the code
+git clone --depth 1 https://github.com/supabase/supabase
+
+# Go to the docker folder
+cd supabase/docker
+
+# Copy the fake env vars
+cp .env.example .env
+
+# Pull the latest images
+docker compose pull
+
+# Start the services (in detached mode)
+docker compose up -d
+
+```
