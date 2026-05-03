@@ -78,7 +78,7 @@ ollama
 
 `docker run --name mongo -p 27017:27017 -v $DOCKER_VOLUMES_ROOT/mongodb:/data/db -e MONGO_INITDB_ROOT_USERNAME=mongoadmin -e MONGO_INITDB_ROOT_PASSWORD=minhaz --network minhazul-net -d mongo`
 
-`docker run --name mongo -p 27017:27017 -v $DOCKER_VOLUMES_ROOT/mongodb:/data/db -e MONGO_INITDB_ROOT_USERNAME=mongoadmin -e MONGO_INITDB_ROOT_PASSWORD=minhaz --network minhazul-net -d mongo:7`
+`docker run --name mongo -p 27017:27017 -v $DOCKER_VOLUMES_ROOT/mongodb:/data/db -e MONGO_INITDB_ROOT_USERNAME=mongoadmin -e MONGO_INITDB_ROOT_PASSWORD=minhaz --network minhazul-net -d mongo:6`
 
 # Mongo compass
 
