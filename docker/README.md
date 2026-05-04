@@ -118,8 +118,19 @@ docker run -p 27117:27017 -d mongodb/mongodb-community-server:latest --name mong
 
 # Neo4j
 
-`docker run -d --name neo4j -v %DOCKER_VOLUMES_ROOT%/neo4j:/data --publish=7474:7474 --publish=7473:7473 --publish=7687:7687 neo4j`
+```
+docker run -d --network minhazul-net --name neo4j -v $DOCKER_VOLUMES_ROOT/neo4j:/data -v $DOCKER_VOLUMES_ROOT/neo4j/plugins:/plugins --publish=7474:7474 --publish=7473:7473 --publish=7687:7687 --env NEO4J_AUTH=neo4j/12345678 --env NEO4J_PLUGINS='["apoc", "graph-data-science"]' neo4j
+```
+```
+docker run -it --rm --publish=7474:7474 --publish=7687:7687 --env NEO4J_AUTH=none --env NEO4J_server_directories_plugins=/var/lib/neo4j/labs/ neo4j
+```
 
+Worked in vscode terminal
+```
+docker run --rm  --publish=7474:7474 --publish=7687:7687 --env NEO4J_PLUGINS='["apoc"]' neo4j
+
+docker run --rm  --publish=7474:7474 --publish=7687:7687 --env NEO4J_PLUGINS='["apoc", "graph-data-science"]' neo4j
+```
 # ElasticSearch
 
 data02:/usr/share/elasticsearch/data
