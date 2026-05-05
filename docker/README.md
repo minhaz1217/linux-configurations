@@ -131,6 +131,14 @@ docker run --rm  --publish=7474:7474 --publish=7687:7687 --env NEO4J_PLUGINS='["
 
 docker run --rm  --publish=7474:7474 --publish=7687:7687 --env NEO4J_PLUGINS='["apoc", "graph-data-science"]' neo4j
 ```
+CALL apoc.help("version");
+CALL gds.version()
+
+cypher-shell "RETURN apoc.version();"
+cypher-shell "RETURN gds.version();"
+
+conf folder >> /var/lib/neo4j/conf/neo4j.conf
+
 # ElasticSearch
 
 data02:/usr/share/elasticsearch/data
