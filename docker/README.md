@@ -139,6 +139,23 @@ cypher-shell "RETURN gds.version();"
 
 conf folder >> /var/lib/neo4j/conf/neo4j.conf
 
+
+Minimal that worked >>
+```
+docker run -it --rm --publish=7474:7474 --publish=7687:7687 --env NEO4J_AUTH=none --env NEO4J_server_directories_plugins=/var/lib/neo4j/labs/ neo4j
+```
+
+WORKED >>
+```
+docker run -it --rm --publish=7474:7474 --publish=7687:7687 --env NEO4J_AUTH=none --env='NEO4J_PLUGINS=["apoc"]' --env NEO4J_server_directories_plugins=/var/lib/neo4j/labs/ --env NEO4J_dbms_security_procedures_unrestricted=apoc.* --env NEO4J_dbms_security_procedures_allowlist=apoc.* neo4j
+```
+
+
+CREATE USER <username> SET PASSWORD '<password>';
+CREATE USER minhaz SET PASSWORD 'minhazminhaz';
+CREATE USER minhaz SET PASSWORD 'minhaz123456';
+
+
 # ElasticSearch
 
 data02:/usr/share/elasticsearch/data
