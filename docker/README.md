@@ -609,7 +609,7 @@ GO
 
 # Redis insight
 
-`docker run -dit --name redisinsight --network minhazul-net -v $DOCKER_VOLUMES_ROOT/redisinsight:/db redislabs/redisinsight:latest`
+`docker run -dit --name redisinsight --network minhazul-net -v $DOCKER_VOLUMES_ROOT/redisinsight:/db -p 5540:5540 redislabs/redisinsight:latest`
 
 # Portainer
 
