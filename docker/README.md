@@ -693,6 +693,10 @@ docker run -d --name sonarqube \
 ```
 docker run -d --network minhazul-net --name uptime --restart=always -p 3001:3001 -v $DOCKER_VOLUMES_ROOT/uptime-kuma:/app/data louislam/uptime-kuma:1
 ```
+### backup maria db command
+```
+mariadb-dump kuma -S /app/data/run/mariadb.sock --ignore-table-data=kuma.heartbeat > /app/backups/uptime-kuma/uptime_backup/1.txt
+```
 
 # Allure
 
